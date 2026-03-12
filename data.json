@@ -1,0 +1,1666 @@
+[
+  {
+    "name": "Zapier",
+    "hq": "San Francisco, CA",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "category": "orchestration",
+    "tagline": "No-code workflow automation connecting 7,000+ apps",
+    "founded": 2011,
+    "funding": "$1.4B",
+    "fundingRound": "Series B",
+    "fundingDate": "2021",
+    "investors": "Sequoia, a16z, General Catalyst",
+    "valuation": "~$5B",
+    "employees": "800+",
+    "website": "https://zapier.com",
+    "products": [
+      {
+        "name": "Zapier AI",
+        "desc": "AI-powered Zap builder via natural language",
+        "link": "https://zapier.com/ai"
+      },
+      {
+        "name": "Canvas",
+        "desc": "Visual workflow builder with AI suggestions",
+        "link": "https://zapier.com/canvas"
+      },
+      {
+        "name": "Interfaces",
+        "desc": "Build internal apps",
+        "link": "https://zapier.com/interfaces"
+      }
+    ],
+    "tags": [
+      "orchestration",
+      "legacy"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Make",
+    "hq": "Prague, Czech Republic",
+    "lat": 50.0755,
+    "lng": 14.4378,
+    "category": "orchestration",
+    "tagline": "Visual automation platform with 1,000+ app integrations",
+    "founded": 2012,
+    "funding": "$100M+",
+    "fundingRound": "Series A",
+    "fundingDate": "2022",
+    "investors": "Celonis",
+    "valuation": "~$500M",
+    "employees": "500+",
+    "website": "https://make.com",
+    "products": [
+      {
+        "name": "Make AI",
+        "desc": "AI modules for text/image generation inside workflows",
+        "link": "https://make.com/en/ai"
+      },
+      {
+        "name": "Scenarios",
+        "desc": "Visual drag-and-drop automation builder",
+        "link": "https://make.com"
+      }
+    ],
+    "tags": [
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": false,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "n8n",
+    "hq": "Berlin, Germany",
+    "lat": 52.52,
+    "lng": 13.405,
+    "category": "orchestration",
+    "tagline": "Open-source workflow automation with AI agent nodes",
+    "founded": 2019,
+    "funding": "$58M",
+    "fundingRound": "Series B",
+    "fundingDate": "2023",
+    "investors": "Sequoia, Felicis",
+    "valuation": "~$220M",
+    "employees": "200+",
+    "website": "https://n8n.io",
+    "products": [
+      {
+        "name": "n8n AI Agent",
+        "desc": "LLM-powered agent nodes with tool calling",
+        "link": "https://n8n.io/ai"
+      },
+      {
+        "name": "Self-hosted",
+        "desc": "Open-source deploy on your own infrastructure",
+        "link": "https://github.com/n8n-io/n8n"
+      }
+    ],
+    "tags": [
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Workato",
+    "hq": "Mountain View, CA",
+    "lat": 37.3861,
+    "lng": -122.0839,
+    "category": "orchestration",
+    "tagline": "Enterprise automation platform with AI copilot",
+    "founded": 2013,
+    "funding": "$405M",
+    "fundingRound": "Series E",
+    "fundingDate": "2022",
+    "investors": "Battery Ventures, Insight Partners, Tiger Global",
+    "valuation": "$5.7B",
+    "employees": "1000+",
+    "website": "https://workato.com",
+    "products": [
+      {
+        "name": "Workato Copilot",
+        "desc": "AI assistant for building automation recipes",
+        "link": "https://workato.com/product/workato-copilot"
+      },
+      {
+        "name": "AI by Workato",
+        "desc": "Embed AI into enterprise workflows",
+        "link": "https://workato.com/product/ai"
+      }
+    ],
+    "tags": [
+      "orchestration",
+      "enterprise"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Microsoft Power Automate",
+    "hq": "Redmond, WA",
+    "lat": 47.674,
+    "lng": -122.1215,
+    "category": "orchestration",
+    "tagline": "Microsoft's enterprise automation and AI workflow platform",
+    "founded": 2016,
+    "funding": "Public (MSFT)",
+    "fundingRound": "Public",
+    "fundingDate": "N/A",
+    "investors": "Public",
+    "valuation": "~$3T market cap",
+    "employees": "220,000+",
+    "website": "https://powerautomate.microsoft.com",
+    "products": [
+      {
+        "name": "Copilot in Power Automate",
+        "desc": "Natural language to automation flows with AI",
+        "link": "https://powerautomate.microsoft.com/en-us/copilot/"
+      },
+      {
+        "name": "Process Mining",
+        "desc": "AI-powered process discovery and optimization",
+        "link": "https://powerautomate.microsoft.com/en-us/process-mining/"
+      }
+    ],
+    "tags": [
+      "orchestration",
+      "enterprise"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Dify",
+    "hq": "San Francisco, CA",
+    "lat": 37.7649,
+    "lng": -122.4094,
+    "category": "orchestration",
+    "tagline": "Open-source LLM app development platform",
+    "founded": 2023,
+    "funding": "$21M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Benchmark",
+    "valuation": "~$100M",
+    "employees": "50+",
+    "website": "https://dify.ai",
+    "products": [
+      {
+        "name": "Dify Platform",
+        "desc": "Build LLM apps, chatbots, and agents visually",
+        "link": "https://dify.ai"
+      },
+      {
+        "name": "Dify Cloud",
+        "desc": "Managed hosting with team collaboration",
+        "link": "https://cloud.dify.ai"
+      }
+    ],
+    "tags": [
+      "orchestration",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Coze (ByteDance)",
+    "hq": "Singapore",
+    "lat": 1.3521,
+    "lng": 103.8198,
+    "category": "orchestration",
+    "tagline": "ByteDance's AI bot builder with plugins and workflows",
+    "founded": 2023,
+    "funding": "ByteDance private",
+    "fundingRound": "Corporate",
+    "fundingDate": "2023",
+    "investors": "ByteDance",
+    "valuation": "N/A",
+    "employees": "500+",
+    "website": "https://coze.com",
+    "products": [
+      {
+        "name": "Coze Bot Builder",
+        "desc": "Build AI bots with plugins, memory, and workflows",
+        "link": "https://coze.com"
+      },
+      {
+        "name": "Coze API",
+        "desc": "Deploy bots to multiple messaging platforms",
+        "link": "https://coze.com/docs/developer_guides/coze_api_overview"
+      }
+    ],
+    "tags": [
+      "orchestration",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Dust",
+    "hq": "Paris, France",
+    "lat": 48.8566,
+    "lng": 2.3522,
+    "category": "orchestration",
+    "tagline": "AI assistants connected to your company's tools",
+    "founded": 2022,
+    "funding": "$16M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Sequoia",
+    "valuation": "N/A",
+    "employees": "30+",
+    "website": "https://dust.tt",
+    "products": [
+      {
+        "name": "Dust Platform",
+        "desc": "Build AI assistants connected to Notion, Slack, GitHub",
+        "link": "https://dust.tt"
+      }
+    ],
+    "tags": [
+      "orchestration",
+      "enterprise"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Activepieces",
+    "hq": "Cairo, Egypt",
+    "lat": 30.0444,
+    "lng": 31.2357,
+    "category": "orchestration",
+    "tagline": "Open-source no-code automation with AI steps",
+    "founded": 2022,
+    "funding": "$6.5M",
+    "fundingRound": "Seed",
+    "fundingDate": "2023",
+    "investors": "Y Combinator",
+    "valuation": "N/A",
+    "employees": "20+",
+    "website": "https://activepieces.com",
+    "products": [
+      {
+        "name": "Activepieces",
+        "desc": "Open-source no-code automation with AI steps and 200+ integrations",
+        "link": "https://activepieces.com"
+      }
+    ],
+    "tags": [
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": false,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "LangChain",
+    "hq": "San Francisco, CA",
+    "lat": 37.7849,
+    "lng": -122.4094,
+    "category": "agent",
+    "tagline": "Framework for building LLM-powered applications and agents",
+    "founded": 2022,
+    "funding": "$35M",
+    "fundingRound": "Series A",
+    "fundingDate": "2023",
+    "investors": "Sequoia, Benchmark",
+    "valuation": "~$200M",
+    "employees": "50+",
+    "website": "https://langchain.com",
+    "products": [
+      {
+        "name": "LangGraph",
+        "desc": "Stateful multi-agent orchestration framework",
+        "link": "https://langchain-ai.github.io/langgraph/"
+      },
+      {
+        "name": "LangSmith",
+        "desc": "LLM observability and evaluation platform",
+        "link": "https://smith.langchain.com"
+      },
+      {
+        "name": "LangGraph Cloud",
+        "desc": "Managed deployment for LangGraph agents",
+        "link": "https://langchain.com/langgraph-cloud"
+      }
+    ],
+    "tags": [
+      "agent",
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "CrewAI",
+    "hq": "San Francisco, CA",
+    "lat": 37.7749,
+    "lng": -122.3994,
+    "category": "agent",
+    "tagline": "Multi-agent AI framework for collaborative task execution",
+    "founded": 2023,
+    "funding": "$18M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Insight Partners, NVIDIA",
+    "valuation": "~$100M",
+    "employees": "30+",
+    "website": "https://crewai.com",
+    "products": [
+      {
+        "name": "CrewAI Enterprise",
+        "desc": "Deploy multi-agent crews in production",
+        "link": "https://crewai.com/enterprise"
+      },
+      {
+        "name": "CrewAI+",
+        "desc": "Managed cloud platform for AI crews",
+        "link": "https://crewai.com/crewaiplus"
+      }
+    ],
+    "tags": [
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Microsoft AutoGen",
+    "hq": "Redmond, WA",
+    "lat": 47.684,
+    "lng": -122.1115,
+    "category": "agent",
+    "tagline": "Open-source multi-agent conversation framework by Microsoft",
+    "founded": 2023,
+    "funding": "Public (MSFT)",
+    "fundingRound": "Public",
+    "fundingDate": "N/A",
+    "investors": "Public",
+    "valuation": "N/A",
+    "employees": "220,000+",
+    "website": "https://microsoft.github.io/autogen",
+    "products": [
+      {
+        "name": "AutoGen Studio",
+        "desc": "No-code UI for building multi-agent workflows",
+        "link": "https://microsoft.github.io/autogen/docs/autogen-studio/"
+      },
+      {
+        "name": "AutoGen v0.4",
+        "desc": "Async event-driven agent framework",
+        "link": "https://microsoft.github.io/autogen/"
+      }
+    ],
+    "tags": [
+      "agent",
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Relevance AI",
+    "hq": "Sydney, Australia",
+    "lat": -33.8688,
+    "lng": 151.2093,
+    "category": "agent",
+    "tagline": "Build and deploy AI agent workforces for business",
+    "founded": 2020,
+    "funding": "$24M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "King River Capital, Galileo Ventures",
+    "valuation": "~$150M",
+    "employees": "80+",
+    "website": "https://relevanceai.com",
+    "products": [
+      {
+        "name": "AI Workforce",
+        "desc": "Build a team of AI agents for any business function",
+        "link": "https://relevanceai.com/ai-workforce"
+      },
+      {
+        "name": "BDR Agent",
+        "desc": "Autonomous sales development representative",
+        "link": "https://relevanceai.com/bdr"
+      }
+    ],
+    "tags": [
+      "agent",
+      "enterprise"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Lindy AI",
+    "hq": "San Francisco, CA",
+    "lat": 37.7549,
+    "lng": -122.4294,
+    "category": "agent",
+    "tagline": "AI agent for inbox, scheduling, and CRM automation",
+    "founded": 2023,
+    "funding": "$10.4M",
+    "fundingRound": "Seed",
+    "fundingDate": "2024",
+    "investors": "a16z, Salesforce Ventures",
+    "valuation": "N/A",
+    "employees": "20+",
+    "website": "https://lindy.ai",
+    "products": [
+      {
+        "name": "Lindy",
+        "desc": "AI agent for email, scheduling, and CRM",
+        "link": "https://lindy.ai"
+      },
+      {
+        "name": "Lindy Teams",
+        "desc": "Multi-agent collaboration platform",
+        "link": "https://lindy.ai/teams"
+      }
+    ],
+    "tags": [
+      "agent",
+      "voice"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": "partial",
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Adept AI",
+    "hq": "San Francisco, CA",
+    "lat": 37.7649,
+    "lng": -122.4294,
+    "category": "agent",
+    "tagline": "AI agents that take actions in software UIs",
+    "founded": 2022,
+    "funding": "$415M",
+    "fundingRound": "Series B",
+    "fundingDate": "2023",
+    "investors": "Microsoft, General Catalyst, Spark Capital",
+    "valuation": "~$1B",
+    "employees": "100+",
+    "website": "https://adept.ai",
+    "products": [
+      {
+        "name": "Adept Experiments",
+        "desc": "AI agent that controls software UIs autonomously",
+        "link": "https://adept.ai"
+      },
+      {
+        "name": "Persimmon",
+        "desc": "Proprietary model for software action-taking",
+        "link": "https://adept.ai/blog/persimmon-8b"
+      }
+    ],
+    "tags": [
+      "agent",
+      "browser"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Cognition (Devin)",
+    "hq": "San Francisco, CA",
+    "lat": 37.7549,
+    "lng": -122.4194,
+    "category": "agent",
+    "tagline": "Autonomous AI software engineer that plans, codes, and deploys",
+    "founded": 2023,
+    "funding": "$175M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Peter Thiel, a16z, Founders Fund",
+    "valuation": "$2B",
+    "employees": "30+",
+    "website": "https://cognition.ai",
+    "products": [
+      {
+        "name": "Devin",
+        "desc": "Autonomous AI software engineer \u2014 plans, codes, deploys",
+        "link": "https://cognition.ai/devin"
+      }
+    ],
+    "tags": [
+      "agent",
+      "browser"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Figure AI",
+    "hq": "Sunnyvale, CA",
+    "lat": 37.3688,
+    "lng": -122.0363,
+    "category": "agent",
+    "tagline": "Humanoid robots powered by AI reasoning for labor automation",
+    "founded": 2022,
+    "funding": "$754M",
+    "fundingRound": "Series B",
+    "fundingDate": "2024",
+    "investors": "OpenAI, Microsoft, NVIDIA, Bezos",
+    "valuation": "$2.6B",
+    "employees": "300+",
+    "website": "https://figure.ai",
+    "products": [
+      {
+        "name": "Figure 02",
+        "desc": "Humanoid robot with OpenAI-powered reasoning",
+        "link": "https://figure.ai/figure-02"
+      },
+      {
+        "name": "Helix",
+        "desc": "Foundation model for humanoid robot control",
+        "link": "https://figure.ai/helix"
+      }
+    ],
+    "tags": [
+      "agent",
+      "voice",
+      "robotics"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": true
+    }
+  },
+  {
+    "name": "Physical Intelligence",
+    "hq": "San Francisco, CA",
+    "lat": 37.7749,
+    "lng": -122.3894,
+    "category": "agent",
+    "tagline": "General-purpose AI for physical robots and dexterous manipulation",
+    "founded": 2023,
+    "funding": "$400M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Jeff Bezos, a16z, Khosla",
+    "valuation": "$2.4B",
+    "employees": "100+",
+    "website": "https://physicalintelligence.company",
+    "products": [
+      {
+        "name": "pi-zero",
+        "desc": "Foundation model for dexterous robot manipulation",
+        "link": "https://physicalintelligence.company/blog/pi0"
+      }
+    ],
+    "tags": [
+      "agent",
+      "robotics"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": true
+    }
+  },
+  {
+    "name": "Inflection AI",
+    "hq": "Palo Alto, CA",
+    "lat": 37.4419,
+    "lng": -122.143,
+    "category": "agent",
+    "tagline": "Personal AI assistant with conversational memory",
+    "founded": 2022,
+    "funding": "$1.3B",
+    "fundingRound": "Series B",
+    "fundingDate": "2023",
+    "investors": "Microsoft, NVIDIA, Bill Gates, Eric Schmidt",
+    "valuation": "~$4B",
+    "employees": "200+",
+    "website": "https://inflection.ai",
+    "products": [
+      {
+        "name": "Pi",
+        "desc": "Personal AI assistant with deep conversational memory",
+        "link": "https://pi.ai"
+      },
+      {
+        "name": "Inflection for Enterprise",
+        "desc": "Custom AI models for enterprise deployment",
+        "link": "https://inflection.ai/enterprise"
+      }
+    ],
+    "tags": [
+      "agent",
+      "voice"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Harvey AI",
+    "hq": "San Francisco, CA",
+    "lat": 37.7849,
+    "lng": -122.4094,
+    "category": "agent",
+    "tagline": "AI agents for legal research, drafting, and due diligence",
+    "founded": 2022,
+    "funding": "$206M",
+    "fundingRound": "Series C",
+    "fundingDate": "2024",
+    "investors": "OpenAI, Sequoia, Google",
+    "valuation": "$1.5B",
+    "employees": "200+",
+    "website": "https://harvey.ai",
+    "products": [
+      {
+        "name": "Harvey",
+        "desc": "AI agents for legal research, drafting, and due diligence",
+        "link": "https://harvey.ai"
+      }
+    ],
+    "tags": [
+      "agent",
+      "enterprise"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "UiPath",
+    "hq": "New York, NY",
+    "lat": 40.7128,
+    "lng": -74.006,
+    "category": "rpa",
+    "tagline": "Enterprise RPA platform with AI agent layer",
+    "founded": 2005,
+    "funding": "$2B+ (IPO)",
+    "fundingRound": "IPO",
+    "fundingDate": "2021",
+    "investors": "Public (NYSE: PATH)",
+    "valuation": "~$10B",
+    "employees": "4,000+",
+    "website": "https://uipath.com",
+    "products": [
+      {
+        "name": "Autopilot",
+        "desc": "AI agent layer on top of UiPath RPA",
+        "link": "https://uipath.com/autopilot"
+      },
+      {
+        "name": "Agent Builder",
+        "desc": "Build LLM-powered agents with RPA actions",
+        "link": "https://uipath.com/product/agent-builder"
+      },
+      {
+        "name": "Document Understanding",
+        "desc": "AI-powered document processing",
+        "link": "https://uipath.com/product/document-understanding"
+      }
+    ],
+    "tags": [
+      "rpa",
+      "enterprise"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": "partial",
+      "Robotics integration": true
+    }
+  },
+  {
+    "name": "Automation Anywhere",
+    "hq": "San Jose, CA",
+    "lat": 37.3382,
+    "lng": -121.8863,
+    "category": "rpa",
+    "tagline": "AI-powered RPA with intelligent automation cloud",
+    "founded": 2003,
+    "funding": "$840M",
+    "fundingRound": "Series B",
+    "fundingDate": "2022",
+    "investors": "SoftBank, Goldman Sachs, NEA",
+    "valuation": "$6.8B",
+    "employees": "3,500+",
+    "website": "https://automationanywhere.com",
+    "products": [
+      {
+        "name": "AI Agent Studio",
+        "desc": "Build and deploy AI agents with RPA capabilities",
+        "link": "https://automationanywhere.com/products/ai-agent-studio"
+      },
+      {
+        "name": "AARI",
+        "desc": "AI-powered attended automation assistant",
+        "link": "https://automationanywhere.com/products/aari"
+      }
+    ],
+    "tags": [
+      "rpa",
+      "enterprise"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Blue Prism",
+    "hq": "London, UK",
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "category": "rpa",
+    "tagline": "Enterprise RPA platform acquired by SS&C",
+    "founded": 2001,
+    "funding": "Acquired $1.3B",
+    "fundingRound": "Acquisition",
+    "fundingDate": "2022",
+    "investors": "SS&C Technologies",
+    "valuation": "$1.3B acquisition",
+    "employees": "2,000+",
+    "website": "https://blueprism.com",
+    "products": [
+      {
+        "name": "Blue Prism Cloud",
+        "desc": "Cloud RPA with AI skills marketplace",
+        "link": "https://blueprism.com/products/cloud/"
+      },
+      {
+        "name": "Decipher IDP",
+        "desc": "Intelligent document processing with AI",
+        "link": "https://blueprism.com/products/decipher-idp/"
+      }
+    ],
+    "tags": [
+      "rpa",
+      "legacy"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": false,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Pega Systems",
+    "hq": "Cambridge, MA",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "category": "rpa",
+    "tagline": "Enterprise platform for BPM, CRM, and intelligent automation",
+    "founded": 1983,
+    "funding": "Public (PEGA)",
+    "fundingRound": "IPO",
+    "fundingDate": "1996",
+    "investors": "Public (NASDAQ: PEGA)",
+    "valuation": "~$2.5B",
+    "employees": "6,000+",
+    "website": "https://pega.com",
+    "products": [
+      {
+        "name": "Pega GenAI",
+        "desc": "Generative AI across the Pega platform",
+        "link": "https://pega.com/genai"
+      },
+      {
+        "name": "Pega Infinity 24",
+        "desc": "Latest platform with AI-driven automation",
+        "link": "https://pega.com/platform"
+      }
+    ],
+    "tags": [
+      "rpa",
+      "enterprise",
+      "legacy"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": false,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Bland AI",
+    "hq": "San Francisco, CA",
+    "lat": 37.7749,
+    "lng": -122.3994,
+    "category": "voice",
+    "tagline": "Human-like AI phone agents for inbound and outbound calls",
+    "founded": 2023,
+    "funding": "$22M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Scale AI, Y Combinator",
+    "valuation": "~$200M",
+    "employees": "30+",
+    "website": "https://bland.ai",
+    "products": [
+      {
+        "name": "Bland AI Phone Agents",
+        "desc": "Human-like AI agents for inbound/outbound calls",
+        "link": "https://bland.ai"
+      },
+      {
+        "name": "Pathways",
+        "desc": "Visual call flow builder with branching logic",
+        "link": "https://bland.ai/features"
+      }
+    ],
+    "tags": [
+      "voice",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Vapi",
+    "hq": "San Francisco, CA",
+    "lat": 37.7649,
+    "lng": -122.4094,
+    "category": "voice",
+    "tagline": "Voice API for building AI voice agents with any LLM",
+    "founded": 2023,
+    "funding": "$20M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Bessemer, Y Combinator",
+    "valuation": "N/A",
+    "employees": "30+",
+    "website": "https://vapi.ai",
+    "products": [
+      {
+        "name": "Vapi Voice API",
+        "desc": "Build voice agents in minutes with any LLM",
+        "link": "https://vapi.ai"
+      },
+      {
+        "name": "Squads",
+        "desc": "Multi-agent voice call routing and handoff",
+        "link": "https://vapi.ai/features"
+      }
+    ],
+    "tags": [
+      "voice",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": true,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Retell AI",
+    "hq": "San Francisco, CA",
+    "lat": 37.7549,
+    "lng": -122.3994,
+    "category": "voice",
+    "tagline": "Build and deploy voice AI agents at scale",
+    "founded": 2023,
+    "funding": "$4.5M",
+    "fundingRound": "Seed",
+    "fundingDate": "2024",
+    "investors": "Y Combinator",
+    "valuation": "N/A",
+    "employees": "15+",
+    "website": "https://retellai.com",
+    "products": [
+      {
+        "name": "Retell Voice Agent",
+        "desc": "Build and deploy voice AI agents at scale with low latency",
+        "link": "https://retellai.com"
+      }
+    ],
+    "tags": [
+      "voice"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": false,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "ElevenLabs",
+    "hq": "New York, NY",
+    "lat": 40.7228,
+    "lng": -74.006,
+    "category": "voice",
+    "tagline": "Ultra-realistic AI voice synthesis and conversational agents",
+    "founded": 2022,
+    "funding": "$180M",
+    "fundingRound": "Series C",
+    "fundingDate": "2024",
+    "investors": "a16z, Nat Friedman, Sequoia",
+    "valuation": "$3.3B",
+    "employees": "200+",
+    "website": "https://elevenlabs.io",
+    "products": [
+      {
+        "name": "ElevenLabs Conversational AI",
+        "desc": "Build voice agents with ultra-realistic speech",
+        "link": "https://elevenlabs.io/conversational-ai"
+      },
+      {
+        "name": "Projects",
+        "desc": "Long-form audio content generation platform",
+        "link": "https://elevenlabs.io/projects"
+      }
+    ],
+    "tags": [
+      "voice"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Voiceflow",
+    "hq": "Toronto, Canada",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "category": "voice",
+    "tagline": "Visual builder for voice and chat AI agents",
+    "founded": 2019,
+    "funding": "$50M",
+    "fundingRound": "Series B",
+    "fundingDate": "2023",
+    "investors": "Felicis, Workday Ventures",
+    "valuation": "~$250M",
+    "employees": "150+",
+    "website": "https://voiceflow.com",
+    "products": [
+      {
+        "name": "Voiceflow Agent",
+        "desc": "Visual builder for voice and chat AI agents",
+        "link": "https://voiceflow.com"
+      },
+      {
+        "name": "Knowledge Base",
+        "desc": "RAG-powered knowledge layer for AI agents",
+        "link": "https://voiceflow.com/features/knowledge-base"
+      }
+    ],
+    "tags": [
+      "voice",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Botpress",
+    "hq": "Montreal, Canada",
+    "lat": 45.5017,
+    "lng": -73.5673,
+    "category": "voice",
+    "tagline": "Visual AI agent builder with multi-LLM support",
+    "founded": 2017,
+    "funding": "$25M",
+    "fundingRound": "Series A",
+    "fundingDate": "2022",
+    "investors": "Inovia Capital",
+    "valuation": "N/A",
+    "employees": "150+",
+    "website": "https://botpress.com",
+    "products": [
+      {
+        "name": "Botpress Studio",
+        "desc": "Visual AI agent builder with multi-LLM support",
+        "link": "https://botpress.com"
+      },
+      {
+        "name": "Botpress Cloud",
+        "desc": "Deploy agents to web, WhatsApp, Slack",
+        "link": "https://botpress.com/cloud"
+      }
+    ],
+    "tags": [
+      "voice",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": true,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Browserbase",
+    "hq": "San Francisco, CA",
+    "lat": 37.7749,
+    "lng": -122.3794,
+    "category": "browser",
+    "tagline": "Cloud browser infrastructure for AI agents",
+    "founded": 2023,
+    "funding": "$27M",
+    "fundingRound": "Series A",
+    "fundingDate": "2024",
+    "investors": "Kleiner Perkins, Y Combinator",
+    "valuation": "N/A",
+    "employees": "20+",
+    "website": "https://browserbase.com",
+    "products": [
+      {
+        "name": "Stagehand",
+        "desc": "AI-native browser automation framework",
+        "link": "https://github.com/browserbase/stagehand"
+      },
+      {
+        "name": "Browserbase Cloud",
+        "desc": "Scalable headless browser sessions for AI agents",
+        "link": "https://browserbase.com"
+      }
+    ],
+    "tags": [
+      "browser",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "MultiOn",
+    "hq": "San Francisco, CA",
+    "lat": 37.7649,
+    "lng": -122.3894,
+    "category": "browser",
+    "tagline": "AI agent that autonomously completes web tasks",
+    "founded": 2023,
+    "funding": "$10M",
+    "fundingRound": "Seed",
+    "fundingDate": "2023",
+    "investors": "a16z, Nat Friedman",
+    "valuation": "N/A",
+    "employees": "15+",
+    "website": "https://multion.ai",
+    "products": [
+      {
+        "name": "MultiOn Agent",
+        "desc": "AI agent that completes web tasks autonomously",
+        "link": "https://multion.ai"
+      },
+      {
+        "name": "MultiOn API",
+        "desc": "Programmatic web agent API for developers",
+        "link": "https://multion.ai/api"
+      }
+    ],
+    "tags": [
+      "browser",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "OpenAI Operator",
+    "hq": "San Francisco, CA",
+    "lat": 37.7849,
+    "lng": -122.3994,
+    "category": "browser",
+    "tagline": "OpenAI's computer-use agent for web navigation and task completion",
+    "founded": 2015,
+    "funding": "$17.9B",
+    "fundingRound": "Multiple",
+    "fundingDate": "2024",
+    "investors": "Microsoft, Thrive, Tiger Global",
+    "valuation": "$157B",
+    "employees": "3,000+",
+    "website": "https://openai.com/operator",
+    "products": [
+      {
+        "name": "Operator",
+        "desc": "AI agent that navigates websites and completes tasks",
+        "link": "https://openai.com/operator"
+      },
+      {
+        "name": "CUA (Computer-Use Agent)",
+        "desc": "Model trained for computer interaction",
+        "link": "https://openai.com/index/computer-using-agent/"
+      }
+    ],
+    "tags": [
+      "browser",
+      "agent",
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": true,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Anthropic Claude",
+    "hq": "San Francisco, CA",
+    "lat": 37.7849,
+    "lng": -122.4094,
+    "category": "browser",
+    "tagline": "Frontier AI model with computer use and tool capabilities",
+    "founded": 2021,
+    "funding": "$7.7B",
+    "fundingRound": "Series E",
+    "fundingDate": "2024",
+    "investors": "Google, Amazon, Spark Capital",
+    "valuation": "$18.4B",
+    "employees": "1,000+",
+    "website": "https://anthropic.com",
+    "products": [
+      {
+        "name": "Claude Computer Use",
+        "desc": "API for Claude to control computers directly",
+        "link": "https://docs.anthropic.com/en/docs/build-with-claude/computer-use"
+      },
+      {
+        "name": "Claude 3.5 Sonnet",
+        "desc": "Frontier model with tool use and vision",
+        "link": "https://anthropic.com/claude"
+      }
+    ],
+    "tags": [
+      "browser",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": false,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": true,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Microsoft Copilot Studio",
+    "hq": "Redmond, WA",
+    "lat": 47.664,
+    "lng": -122.1315,
+    "category": "enterprise",
+    "tagline": "No-code builder for custom Microsoft Copilot agents",
+    "founded": 2023,
+    "funding": "Public (MSFT)",
+    "fundingRound": "Public",
+    "fundingDate": "N/A",
+    "investors": "Public",
+    "valuation": "N/A",
+    "employees": "220,000+",
+    "website": "https://copilotstudio.microsoft.com",
+    "products": [
+      {
+        "name": "Copilot Studio",
+        "desc": "No-code builder for custom AI agents",
+        "link": "https://copilotstudio.microsoft.com"
+      },
+      {
+        "name": "Autonomous Agents",
+        "desc": "Agents that trigger on events and run workflows",
+        "link": "https://microsoft.com/en-us/microsoft-copilot/microsoft-copilot-studio"
+      }
+    ],
+    "tags": [
+      "enterprise",
+      "orchestration",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Salesforce Agentforce",
+    "hq": "San Francisco, CA",
+    "lat": 37.7949,
+    "lng": -122.3994,
+    "category": "enterprise",
+    "tagline": "Autonomous AI agents for sales, service, and marketing",
+    "founded": 1999,
+    "funding": "Public (CRM)",
+    "fundingRound": "IPO",
+    "fundingDate": "2004",
+    "investors": "Public (NYSE: CRM)",
+    "valuation": "~$300B",
+    "employees": "70,000+",
+    "website": "https://salesforce.com/agentforce",
+    "products": [
+      {
+        "name": "Agentforce",
+        "desc": "Autonomous AI agents for sales, service, and marketing",
+        "link": "https://salesforce.com/agentforce"
+      },
+      {
+        "name": "Einstein Copilot",
+        "desc": "Conversational AI assistant across Salesforce",
+        "link": "https://salesforce.com/einstein/"
+      }
+    ],
+    "tags": [
+      "enterprise",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "ServiceNow",
+    "hq": "Santa Clara, CA",
+    "lat": 37.3541,
+    "lng": -121.9552,
+    "category": "enterprise",
+    "tagline": "AI-powered enterprise platform for IT, HR, and customer service",
+    "founded": 2004,
+    "funding": "Public (NOW)",
+    "fundingRound": "IPO",
+    "fundingDate": "2012",
+    "investors": "Public (NYSE: NOW)",
+    "valuation": "~$180B",
+    "employees": "22,000+",
+    "website": "https://servicenow.com",
+    "products": [
+      {
+        "name": "Now Assist AI Agents",
+        "desc": "Autonomous AI agents for IT, HR, and customer service",
+        "link": "https://servicenow.com/products/now-assist.html"
+      },
+      {
+        "name": "AI Agent Orchestrator",
+        "desc": "Coordinate multiple AI agents across enterprise",
+        "link": "https://servicenow.com/products/ai-agent-orchestrator.html"
+      }
+    ],
+    "tags": [
+      "enterprise",
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Google Vertex AI Agents",
+    "hq": "Mountain View, CA",
+    "lat": 37.3961,
+    "lng": -122.0739,
+    "category": "enterprise",
+    "tagline": "Google Cloud's AI agent builder and orchestration platform",
+    "founded": 1998,
+    "funding": "Public (GOOGL)",
+    "fundingRound": "IPO",
+    "fundingDate": "2004",
+    "investors": "Public (NASDAQ: GOOGL)",
+    "valuation": "~$2T",
+    "employees": "180,000+",
+    "website": "https://cloud.google.com/vertex-ai",
+    "products": [
+      {
+        "name": "Agent Builder",
+        "desc": "Build and deploy AI agents on Google Cloud",
+        "link": "https://cloud.google.com/products/agent-builder"
+      },
+      {
+        "name": "Project Mariner",
+        "desc": "Computer-use agent for web navigation",
+        "link": "https://deepmind.google/technologies/project-mariner/"
+      }
+    ],
+    "tags": [
+      "enterprise",
+      "browser",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": true,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Moveworks",
+    "hq": "Mountain View, CA",
+    "lat": 37.3761,
+    "lng": -122.0839,
+    "category": "enterprise",
+    "tagline": "AI copilot for enterprise IT, HR, and finance workflows",
+    "founded": 2016,
+    "funding": "$315M",
+    "fundingRound": "Series C",
+    "fundingDate": "2021",
+    "investors": "ICONIQ, Tiger Global, Lightspeed",
+    "valuation": "$2.1B",
+    "employees": "500+",
+    "website": "https://moveworks.com",
+    "products": [
+      {
+        "name": "Moveworks Copilot",
+        "desc": "AI assistant for IT, HR, and finance workflows",
+        "link": "https://moveworks.com/products/"
+      },
+      {
+        "name": "Creator Studio",
+        "desc": "Build custom AI use cases without code",
+        "link": "https://moveworks.com/products/creator-studio/"
+      }
+    ],
+    "tags": [
+      "enterprise",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": true,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Glean",
+    "hq": "Palo Alto, CA",
+    "lat": 37.4519,
+    "lng": -122.143,
+    "category": "enterprise",
+    "tagline": "AI work assistant with company-wide knowledge graph",
+    "founded": 2019,
+    "funding": "$360M",
+    "fundingRound": "Series E",
+    "fundingDate": "2024",
+    "investors": "Sequoia, Kleiner Perkins, Lightspeed",
+    "valuation": "$4.6B",
+    "employees": "700+",
+    "website": "https://glean.com",
+    "products": [
+      {
+        "name": "Glean Work AI",
+        "desc": "AI assistant with company knowledge graph",
+        "link": "https://glean.com"
+      },
+      {
+        "name": "Glean Apps",
+        "desc": "Build custom AI apps on company data",
+        "link": "https://glean.com/platform"
+      }
+    ],
+    "tags": [
+      "enterprise",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": true,
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": "partial",
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "Writer",
+    "hq": "San Francisco, CA",
+    "lat": 37.7949,
+    "lng": -122.3894,
+    "category": "enterprise",
+    "tagline": "Enterprise AI platform with custom LLMs and workflow agents",
+    "founded": 2020,
+    "funding": "$200M",
+    "fundingRound": "Series C",
+    "fundingDate": "2024",
+    "investors": "ICONIQ, Balderton, Insight",
+    "valuation": "$1.9B",
+    "employees": "300+",
+    "website": "https://writer.com",
+    "products": [
+      {
+        "name": "Palmyra Models",
+        "desc": "Enterprise-grade LLMs with compliance focus",
+        "link": "https://writer.com/product/"
+      },
+      {
+        "name": "Writer Agents",
+        "desc": "AI agents for content, data, and workflow automation",
+        "link": "https://writer.com/agents"
+      }
+    ],
+    "tags": [
+      "enterprise",
+      "agent"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": true,
+      "Browser automation": false,
+      "Agentic workflows": true,
+      "Robotics integration": false
+    }
+  },
+  {
+    "name": "IFTTT",
+    "hq": "San Francisco, CA",
+    "lat": 37.7649,
+    "lng": -122.4194,
+    "category": "legacy",
+    "tagline": "Pioneer of consumer automation connecting apps via triggers",
+    "founded": 2010,
+    "funding": "$62M",
+    "fundingRound": "Series C",
+    "fundingDate": "2015",
+    "investors": "Andreessen Horowitz, Norwest",
+    "valuation": "N/A",
+    "employees": "50+",
+    "website": "https://ifttt.com",
+    "products": [
+      {
+        "name": "IFTTT Pro",
+        "desc": "Multi-step automation applets with AI capabilities",
+        "link": "https://ifttt.com/pro"
+      },
+      {
+        "name": "IFTTT for Business",
+        "desc": "B2B automation integrations platform",
+        "link": "https://ifttt.com/business"
+      }
+    ],
+    "tags": [
+      "legacy",
+      "orchestration"
+    ],
+    "vsIris": {
+      "865+ app integrations": "partial",
+      "Voice-first interface": false,
+      "Multi-model routing": false,
+      "Browser automation": false,
+      "Agentic workflows": false,
+      "Robotics integration": false
+    }
+  }
+]
