@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,511 +41,577 @@
     z-index: 1000;
     backdrop-filter: blur(20px);
   }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .logo { display: flex; align-items: center; gap: 12px; }
   .logo-icon {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 800;
-    color: white;
-    letter-spacing: -1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: white;
+    box-shadow: 0 0 20px rgba(108,99,255,0.4);
   }
-  .logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
-  .logo-sub { font-size: 11px; color: var(--text-muted); font-weight: 400; }
-  .header-stats {
-    display: flex;
-    gap: 24px;
-    align-items: center;
+  .logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+  .logo-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+    cursor: pointer; border: none; transition: all 0.2s; font-family: inherit;
   }
-  .stat-pill {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #7c73ff; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+  .btn-compare {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: white; position: relative;
   }
-  .stat-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
-  .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .dot-yellow { background: var(--yellow); }
-  .dot-red { background: var(--red); }
-  .dot-blue { background: var(--blue); }
-  .header-right { display: flex; align-items: center; gap: 12px; }
-  .btn-refresh {
-    background: linear-gradient(135deg, var(--accent), #8b5cf6);
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
+  .btn-compare:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-compare .compare-badge {
+    position: absolute; top: -6px; right: -6px;
+    background: white; color: #ef4444;
+    border-radius: 50%; width: 18px; height: 18px;
+    font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
   }
-  .btn-refresh:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(108,99,255,0.4); }
+  .btn-refresh { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-refresh:hover { background: var(--surface2); color: var(--text); }
 
   /* LAYOUT */
-  .main { display: flex; flex: 1; overflow: hidden; }
+  .app-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
 
   /* SIDEBAR */
   .sidebar {
-    width: 320px;
+    width: 300px; flex-shrink: 0;
     background: var(--surface);
     border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     overflow: hidden;
-    flex-shrink: 0;
   }
   .sidebar-header {
     padding: 16px;
     border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
   }
   .search-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .search-box input {
-    background: none;
-    border: none;
+    width: 100%; padding: 9px 12px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: 13px; font-family: inherit;
     outline: none;
-    color: var(--text);
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    width: 100%;
   }
-  .search-box input::placeholder { color: var(--text-dim); }
-  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .search-box:focus { border-color: var(--accent); }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
   .filter-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 11px;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'Inter', sans-serif;
+    padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted); font-family: inherit;
+    transition: all 0.2s; white-space: nowrap;
   }
-  .filter-btn:hover, .filter-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-  }
-  .company-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-  }
-  .company-list::-webkit-scrollbar { width: 4px; }
-  .company-list::-webkit-scrollbar-track { background: transparent; }
-  .company-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .filter-btn:hover { background: var(--surface2); color: var(--text); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .sidebar-list { flex: 1; overflow-y: auto; padding: 8px; }
+  .sidebar-list::-webkit-scrollbar { width: 4px; }
+  .sidebar-list::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   .company-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
+    padding: 10px 12px; border-radius: 8px; cursor: pointer;
+    border: 1px solid transparent; margin-bottom: 4px;
+    transition: all 0.15s; display: flex; align-items: center; gap: 10px;
   }
-  .company-item:hover, .company-item.selected {
-    border-color: var(--accent);
-    background: rgba(108,99,255,0.08);
-    transform: translateX(2px);
+  .company-item:hover { background: var(--surface2); border-color: var(--border); }
+  .company-item.selected { background: rgba(108,99,255,0.12); border-color: var(--accent); }
+  .company-item.in-compare { background: rgba(245,158,11,0.1); border-color: var(--yellow); }
+  .company-logo-sm {
+    width: 28px; height: 28px; border-radius: 6px;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
   }
-  .company-item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .company-emoji { font-size: 20px; }
-  .company-name { font-size: 13px; font-weight: 600; flex: 1; }
-  .category-badge {
-    font-size: 9px;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  .company-logo-sm img { width: 100%; height: 100%; object-fit: contain; }
+  .company-logo-sm .letter-avatar {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: white;
   }
-  .cat-orchestration { background: rgba(108,99,255,0.2); color: var(--accent2); border: 1px solid rgba(108,99,255,0.3); }
-  .cat-rpa { background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
-  .cat-voice { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-  .cat-computer { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
-  .cat-local { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
-  .cat-workflow { background: rgba(236,72,153,0.2); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
-  .company-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
-  .funding-tag { display: inline-block; font-size: 10px; color: var(--green); font-weight: 600; margin-top: 4px; }
+  .company-info { flex: 1; min-width: 0; }
+  .company-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .company-meta { font-size: 11px; color: var(--text-muted); }
+  .company-cat-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  }
+  .compare-check {
+    width: 18px; height: 18px; border-radius: 4px;
+    border: 1px solid var(--border); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; transition: all 0.15s;
+  }
+  .compare-check.checked { background: var(--yellow); border-color: var(--yellow); color: white; }
 
   /* MAP */
-  #map {
-    flex: 1;
-    background: #0d0d1a;
-    height: 100%;
-    min-height: 400px;
-  }
+  .map-container { flex: 1; position: relative; min-width: 0; }
+  #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 
-  /* POPUP / CARD */
-  .custom-popup .leaflet-popup-content-wrapper {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-    padding: 0;
-    min-width: 340px;
-    max-width: 400px;
+  /* TIMELINE SLIDER */
+  .timeline-bar {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(18,18,26,0.95); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 20px;
+    z-index: 500; min-width: 380px; max-width: 600px; width: 60%;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   }
-  .custom-popup .leaflet-popup-tip-container { display: none; }
-  .custom-popup .leaflet-popup-content { margin: 0; width: 100% !important; }
-  .popup-card { padding: 20px; }
-  .popup-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
+  .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .timeline-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .timeline-value { font-size: 13px; font-weight: 700; color: var(--accent2); }
+  .timeline-slider {
+    width: 100%; -webkit-appearance: none; appearance: none;
+    height: 4px; border-radius: 2px;
+    background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct, 100%), var(--border) var(--pct, 100%), var(--border) 100%);
+    outline: none; cursor: pointer;
   }
-  .popup-logo {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-    background: var(--surface2);
-    border: 1px solid var(--border);
+  .timeline-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent2); border: 2px solid white;
+    cursor: pointer; box-shadow: 0 0 8px rgba(108,99,255,0.6);
   }
-  .popup-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-  .popup-tagline { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
-  .popup-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-  .meta-chip {
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-weight: 600;
-  }
-  .chip-stage { background: rgba(108,99,255,0.15); color: var(--accent2); }
-  .chip-founded { background: rgba(100,116,139,0.15); color: var(--text-muted); }
-  .chip-hq { background: rgba(16,185,129,0.15); color: #34d399; }
-  .popup-section { margin-bottom: 12px; }
-  .popup-section-title {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-  .popup-section-content { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .product-list { display: flex; flex-direction: column; gap: 4px; }
-  .product-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 11px;
-  }
-  .product-name { font-weight: 600; color: var(--text); }
-  .product-desc { color: var(--text-muted); }
-  .funding-row {
-    background: rgba(16,185,129,0.08);
-    border: 1px solid rgba(16,185,129,0.2);
-    border-radius: 8px;
-    padding: 8px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .funding-amount { font-size: 16px; font-weight: 700; color: var(--green); }
-  .funding-details { font-size: 11px; color: var(--text-muted); }
-  .popup-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
-  .popup-link {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text);
-    text-decoration: none;
-    transition: all 0.15s;
-  }
-  .popup-link:hover { border-color: var(--accent); color: var(--accent2); }
-  .popup-link.primary {
-    background: linear-gradient(135deg, var(--accent), #8b5cf6);
-    border-color: transparent;
-    color: white;
-  }
-  .popup-link.primary:hover { opacity: 0.9; }
+  .timeline-labels { display: flex; justify-content: space-between; margin-top: 4px; }
+  .timeline-label { font-size: 10px; color: var(--text-dim); }
 
-  /* CUSTOM MARKERS */
-  .custom-marker {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    border: 2px solid rgba(255,255,255,0.2);
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  /* MAP CONTROLS */
+  .map-controls {
+    position: absolute; top: 16px; right: 16px;
+    display: flex; flex-direction: column; gap: 8px; z-index: 500;
   }
-  .custom-marker:hover { transform: scale(1.2); z-index: 1000 !important; }
-  .marker-orchestration { background: linear-gradient(135deg, #6c63ff, #8b5cf6); }
-  .marker-rpa { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-  .marker-voice { background: linear-gradient(135deg, #10b981, #059669); }
-  .marker-computer { background: linear-gradient(135deg, #f59e0b, #d97706); }
-  .marker-local { background: linear-gradient(135deg, #ef4444, #dc2626); }
-  .marker-workflow { background: linear-gradient(135deg, #ec4899, #db2777); }
+  .map-control-btn {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(18,18,26,0.9); border: 1px solid var(--border);
+    color: var(--text-muted); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; backdrop-filter: blur(10px);
+  }
+  .map-control-btn:hover { background: var(--surface2); color: var(--text); }
 
-  /* LEGEND */
-  .map-legend {
-    position: absolute;
-    bottom: 30px;
-    right: 10px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    z-index: 999;
-    min-width: 180px;
+  /* STATS BAR */
+  .stats-bar {
+    position: absolute; top: 16px; left: 16px;
+    display: flex; gap: 8px; z-index: 500;
   }
-  .legend-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 10px; }
-  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: var(--text-muted); }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .stat-chip {
+    background: rgba(18,18,26,0.9); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 12px;
+    font-size: 12px; backdrop-filter: blur(10px);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stat-chip strong { color: var(--accent2); }
 
   /* DETAIL PANEL */
   .detail-panel {
-    position: absolute;
-    top: 80px;
-    right: 10px;
-    width: 380px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    z-index: 998;
-    display: none;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    position: absolute; right: 0; top: 0; bottom: 0;
+    width: 360px; background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 600; transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto; overflow-x: hidden;
+    display: flex; flex-direction: column;
   }
-  .detail-panel.visible { display: block; }
+  .detail-panel.visible { transform: translateX(0); }
   .detail-panel::-webkit-scrollbar { width: 4px; }
   .detail-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .panel-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 14px;
+    position: sticky; top: 0; background: var(--surface); z-index: 1;
+  }
+  .panel-logo {
+    width: 52px; height: 52px; border-radius: 12px;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .panel-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .panel-logo .letter-avatar {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800; color: white;
+  }
+  .panel-title-area { flex: 1; }
+  .panel-name { font-size: 18px; font-weight: 700; }
+  .panel-tagline { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
   .panel-close {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: var(--surface2);
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-muted); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .panel-close:hover { background: var(--red); color: white; border-color: var(--red); }
+  .panel-body { padding: 16px 20px; flex: 1; }
+  .popup-section { margin-bottom: 18px; }
+  .popup-section-title {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px;
+  }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .meta-item {
+    background: var(--surface2); border-radius: 8px; padding: 10px 12px;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text-muted);
-    transition: all 0.15s;
   }
-  .panel-close:hover { color: var(--text); border-color: var(--accent); }
+  .meta-label { font-size: 10px; color: var(--text-dim); margin-bottom: 3px; }
+  .meta-value { font-size: 13px; font-weight: 600; }
+  .stage-badge {
+    display: inline-block; padding: 3px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600;
+  }
+  .funding-row {
+    background: var(--surface2); border-radius: 8px; padding: 12px;
+    border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
+  }
+  .funding-amount { font-size: 20px; font-weight: 800; color: var(--green); }
+  .funding-details { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .product-list { display: flex; flex-direction: column; gap: 6px; }
+  .product-item {
+    background: var(--surface2); border-radius: 8px; padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+  .product-name { font-size: 13px; font-weight: 600; }
+  .product-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .popup-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 500; text-decoration: none;
+    border: 1px solid var(--border); color: var(--text-muted);
+    background: var(--surface2); transition: all 0.2s;
+  }
+  .popup-link:hover { background: var(--surface); color: var(--text); border-color: var(--text-dim); }
+  .popup-link.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .popup-link.primary:hover { background: #7c73ff; }
+  .add-to-compare-btn {
+    width: 100%; padding: 10px; border-radius: 8px;
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15));
+    border: 1px solid rgba(245,158,11,0.4);
+    color: var(--yellow); font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: all 0.2s;
+    margin-top: 12px;
+  }
+  .add-to-compare-btn:hover { background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(239,68,68,0.25)); }
+  .add-to-compare-btn.remove { color: var(--red); border-color: rgba(239,68,68,0.4);
+    background: rgba(239,68,68,0.1); }
 
-  /* TOOLTIP */
-  .leaflet-tooltip {
-    background: var(--surface2) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
-    color: var(--text) !important;
-    font-family: 'Inter', sans-serif !important;
-    font-size: 12px !important;
-    padding: 6px 10px !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+  /* COMPARE PANEL */
+  .compare-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 2000; display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
   }
-  .leaflet-tooltip::before { display: none !important; }
+  .compare-overlay.visible { display: flex; }
+  .compare-modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; width: 95vw; max-width: 1400px;
+    max-height: 90vh; overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  }
+  .compare-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .compare-modal-title { font-size: 18px; font-weight: 700; }
+  .compare-modal-body {
+    flex: 1; overflow-x: auto; overflow-y: auto;
+    padding: 20px 24px;
+  }
+  .compare-grid {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(var(--cols, 2), 1fr);
+    min-width: 0;
+  }
+  .compare-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; min-width: 220px;
+  }
+  .compare-card-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .compare-card-logo {
+    width: 44px; height: 44px; border-radius: 10px;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .compare-card-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .compare-card-logo .letter-avatar {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: white;
+  }
+  .compare-card-name { font-size: 15px; font-weight: 700; }
+  .compare-card-stage { font-size: 11px; color: var(--text-muted); }
+  .compare-row {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .compare-field {
+    background: var(--surface); border-radius: 8px; padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+  .compare-field-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .compare-field-value { font-size: 13px; font-weight: 600; }
+  .compare-field-value.green { color: var(--green); }
+  .compare-field-value.yellow { color: var(--yellow); }
+  .compare-field-value.blue { color: var(--blue); }
 
-  /* Leaflet overrides */
-  .leaflet-container { background: #0d0d1a !important; }
-  .leaflet-control-zoom a {
-    background: var(--surface) !important;
-    color: var(--text) !important;
-    border-color: var(--border) !important;
+  /* WHAT CHANGED PANEL */
+  .delta-panel {
+    position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(18,18,26,0.97); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+    z-index: 500; width: 480px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: none;
   }
-  .leaflet-control-zoom a:hover { background: var(--surface2) !important; }
-  .leaflet-control-attribution {
-    background: rgba(10,10,15,0.8) !important;
-    color: var(--text-dim) !important;
-    font-size: 10px !important;
+  .delta-panel.visible { display: block; }
+  .delta-panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
   }
-  .leaflet-control-attribution a { color: var(--text-dim) !important; }
+  .delta-panel-title { font-size: 14px; font-weight: 700; }
+  .delta-panel-close {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-muted); cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .delta-panel-close:hover { background: var(--red); color: white; }
+  .delta-section { margin-bottom: 14px; }
+  .delta-section-title {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  .delta-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 8px; margin-bottom: 4px;
+    background: var(--surface2); border: 1px solid var(--border);
+  }
+  .delta-logo {
+    width: 24px; height: 24px; border-radius: 5px;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .delta-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .delta-logo .letter-avatar {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: white;
+  }
+  .delta-company { font-size: 12px; font-weight: 600; flex: 1; }
+  .delta-change { font-size: 12px; font-weight: 600; }
+  .delta-change.up { color: var(--green); }
+  .delta-change.down { color: var(--red); }
+  .delta-change.new { color: var(--accent2); }
 
-  /* IRIS badge */
-  .iris-badge {
-    position: absolute;
-    top: 80px;
-    left: 330px;
-    background: linear-gradient(135deg, var(--accent), #8b5cf6);
-    border-radius: 12px;
-    padding: 10px 16px;
-    z-index: 999;
-    font-size: 12px;
-    font-weight: 600;
-    box-shadow: 0 4px 20px rgba(108,99,255,0.4);
+  /* COMPANY LOGO MARKER */
+  .logo-marker {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid white;
+    overflow: hidden; background: white;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    cursor: pointer; transition: transform 0.15s;
   }
-  .iris-badge span { display: block; font-size: 10px; font-weight: 400; opacity: 0.8; margin-top: 2px; }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .iris-badge { left: 10px; }
-    .detail-panel { width: calc(100vw - 20px); right: 10px; }
+  .logo-marker:hover { transform: scale(1.15); }
+  .logo-marker img { width: 100%; height: 100%; object-fit: contain; }
+  .logo-marker .letter-avatar {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: white;
   }
 
-  /* Loading */
-  .loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    flex-direction: column;
-    gap: 16px;
+  /* LOADING */
+  .loading {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; flex-direction: column; gap: 16px;
     transition: opacity 0.5s;
   }
-  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-  .spinner {
-    width: 48px;
-    height: 48px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
+  .loading.hidden { opacity: 0; pointer-events: none; }
+  .loading-spinner {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid var(--border); border-top-color: var(--accent);
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { color: var(--text-muted); font-size: 14px; }
+  .loading-text { font-size: 14px; color: var(--text-muted); }
 
-  /* Count badge */
-  .count-badge {
-    background: var(--accent);
-    color: white;
-    border-radius: 10px;
-    padding: 1px 7px;
-    font-size: 11px;
-    font-weight: 700;
-    margin-left: 6px;
+  /* CATEGORY COLORS */
+  .cat-orchestration { color: #6c63ff; }
+  .cat-workflow { color: #10b981; }
+  .cat-rpa { color: #f59e0b; }
+  .cat-voice { color: #3b82f6; }
+  .cat-data { color: #ec4899; }
+  .cat-infrastructure { color: #14b8a6; }
+  .cat-vertical { color: #f97316; }
+
+  .dot-orchestration { background: #6c63ff; }
+  .dot-workflow { background: #10b981; }
+  .dot-rpa { background: #f59e0b; }
+  .dot-voice { background: #3b82f6; }
+  .dot-data { background: #ec4899; }
+  .dot-infrastructure { background: #14b8a6; }
+  .dot-vertical { background: #f97316; }
+
+  /* LEAFLET CUSTOM */
+  .leaflet-container { background: #0d0d1a !important; }
+  .leaflet-popup-content-wrapper {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   }
+  .leaflet-popup-tip { background: var(--surface2); }
+  .leaflet-popup-content { margin: 12px 14px; font-family: 'Inter', sans-serif; }
+  .leaflet-popup-close-button { color: var(--text-muted) !important; }
+  .leaflet-popup-close-button:hover { color: var(--text) !important; }
+  .lp-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .lp-cat { font-size: 11px; color: var(--text-muted); }
+  .lp-funding { font-size: 13px; font-weight: 600; color: var(--green); margin-top: 6px; }
+  .lp-btn {
+    display: inline-block; margin-top: 8px; padding: 6px 12px;
+    background: var(--accent); color: white; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: none; font-family: inherit;
+  }
+  .lp-btn:hover { background: #7c73ff; }
+
+  /* TOOLTIP */
+  .tooltip {
+    position: absolute; background: rgba(18,18,26,0.95);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 6px 10px; font-size: 12px; pointer-events: none;
+    z-index: 9999; white-space: nowrap; display: none;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 </style>
 </head>
-<body>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loading">
-  <div style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#6c63ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">IRIS</div>
-  <div class="spinner"></div>
-  <div class="loading-text">Loading competitor intelligence...</div>
+<body>
+<div class="loading" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading IRIS Intelligence Map...</div>
 </div>
 
-<!-- Header -->
 <header>
   <div class="logo">
-    <div class="logo-icon">IR</div>
+    <div class="logo-icon">I</div>
     <div>
-      <div class="logo-text">IRIS <span style="font-weight:300;opacity:0.6">Intelligence</span></div>
-      <div class="logo-sub">AI Competitor Landscape Map · 2024–2025</div>
+      <div class="logo-text">IRIS</div>
+      <div class="logo-sub">Competitor Intelligence</div>
     </div>
   </div>
-  <div class="header-stats">
-    <div class="stat-pill"><div class="dot dot-green"></div><span id="total-count">50</span> Companies</div>
-    <div class="stat-pill"><div class="dot dot-yellow"></div><span id="funded-count">32</span> Funded</div>
-    <div class="stat-pill"><div class="dot dot-blue"></div>6 Categories</div>
-    <div class="stat-pill" style="color:var(--text-dim);font-size:11px">Updated Jan 2025</div>
-  </div>
-  <div class="header-right">
-    <button class="btn-refresh" onclick="refreshData()">⟳ Refresh Data</button>
+  <div class="header-actions">
+    <button class="btn btn-ghost" id="deltaBtn" onclick="toggleDeltaPanel()">&#x1F4C8; What Changed</button>
+    <button class="btn btn-compare" id="compareBtn" onclick="openCompareModal()" style="display:none">
+      Compare <span class="compare-badge" id="compareBadge">0</span>
+    </button>
+    <button class="btn btn-ghost" onclick="resetView()">&#x1F5FA; Reset View</button>
   </div>
 </header>
 
-<!-- Main -->
-<div class="main">
-  <!-- Sidebar -->
+<div class="app-body">
+  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
-      <div class="search-box">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text-dim)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="search-input" placeholder="Search companies..." oninput="filterCompanies()">
-      </div>
-      <div class="filter-row">
-        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-        <button class="filter-btn" onclick="setFilter('orchestration', this)">Orchestration</button>
-        <button class="filter-btn" onclick="setFilter('workflow', this)">Workflow</button>
-        <button class="filter-btn" onclick="setFilter('rpa', this)">RPA+AI</button>
-        <button class="filter-btn" onclick="setFilter('voice', this)">Voice</button>
-        <button class="filter-btn" onclick="setFilter('computer', this)">Computer</button>
-        <button class="filter-btn" onclick="setFilter('local', this)">Local AI</button>
+      <input class="search-box" type="text" id="searchBox" placeholder="&#x1F50D; Search companies..." oninput="filterCompanies()">
+      <div class="filter-row" id="filterRow">
+        <button class="filter-btn active" data-cat="all" onclick="setCategoryFilter(this, 'all')">All</button>
+        <button class="filter-btn" data-cat="orchestration" onclick="setCategoryFilter(this, 'orchestration')">Orchestration</button>
+        <button class="filter-btn" data-cat="workflow" onclick="setCategoryFilter(this, 'workflow')">Workflow</button>
+        <button class="filter-btn" data-cat="rpa" onclick="setCategoryFilter(this, 'rpa')">RPA</button>
+        <button class="filter-btn" data-cat="voice" onclick="setCategoryFilter(this, 'voice')">Voice</button>
+        <button class="filter-btn" data-cat="data" onclick="setCategoryFilter(this, 'data')">Data</button>
+        <button class="filter-btn" data-cat="infrastructure" onclick="setCategoryFilter(this, 'infrastructure')">Infra</button>
+        <button class="filter-btn" data-cat="vertical" onclick="setCategoryFilter(this, 'vertical')">Vertical</button>
       </div>
     </div>
-    <div class="company-list" id="company-list"></div>
+    <div class="sidebar-list" id="sidebarList"></div>
   </div>
 
-  <!-- Map -->
-  <div style="position:relative;flex:1">
+  <!-- MAP -->
+  <div class="map-container" id="mapContainer">
     <div id="map"></div>
 
-    <!-- IRIS Badge -->
-    <div class="iris-badge">
-      🚀 IRIS Platform
-      <span>Rochester, NY · You are here</span>
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-chip"><strong id="statCount">0</strong> companies</div>
+      <div class="stat-chip"><strong id="statFunding">$0</strong> total funding</div>
+      <div class="stat-chip" id="compareModeStat" style="display:none; background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4);">
+        <span style="color:var(--yellow)">&#x2713; Compare Mode</span>
+      </div>
     </div>
 
-    <!-- Legend -->
-    <div class="map-legend">
-      <div class="legend-title">Categories</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#6c63ff"></div>Orchestration</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div>Workflow</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>RPA + AI</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Voice-First</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Computer-Use</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Local AI</div>
+    <!-- Timeline slider -->
+    <div class="timeline-bar">
+      <div class="timeline-header">
+        <span class="timeline-title">&#x1F4C5; Timeline — Founded before</span>
+        <span class="timeline-value" id="timelineValue">2025</span>
+      </div>
+      <input type="range" class="timeline-slider" id="timelineSlider"
+        min="2001" max="2025" value="2025"
+        oninput="onTimelineChange(this.value)"
+        style="--pct:100%">
+      <div class="timeline-labels">
+        <span class="timeline-label">2001</span>
+        <span class="timeline-label">2005</span>
+        <span class="timeline-label">2010</span>
+        <span class="timeline-label">2015</span>
+        <span class="timeline-label">2020</span>
+        <span class="timeline-label">2025</span>
+      </div>
     </div>
 
-    <!-- Detail Panel -->
-    <div class="detail-panel" id="detail-panel">
-      <div class="panel-close" onclick="closePanel()">✕</div>
-      <div id="detail-content"></div>
+    <!-- What changed panel -->
+    <div class="delta-panel" id="deltaPanel">
+      <div class="delta-panel-header">
+        <span class="delta-panel-title">&#x1F4C8; What Changed This Week</span>
+        <button class="delta-panel-close" onclick="toggleDeltaPanel()">&#x2715;</button>
+      </div>
+      <div id="deltaPanelBody"></div>
+    </div>
+
+    <!-- Detail panel -->
+    <div class="detail-panel" id="detailPanel">
+      <div id="detailPanelContent"></div>
     </div>
   </div>
 </div>
 
+<!-- Compare Modal -->
+<div class="compare-overlay" id="compareOverlay" onclick="closeCompareModal(event)">
+  <div class="compare-modal">
+    <div class="compare-modal-header">
+      <div>
+        <div class="compare-modal-title">&#x1F4CA; Company Comparison</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Select 2-5 companies from the map or sidebar</div>
+      </div>
+      <button class="btn btn-ghost" onclick="clearCompare()">Clear All</button>
+      <button class="panel-close" onclick="closeCompareModal()" style="margin-left:8px">&#x2715;</button>
+    </div>
+    <div class="compare-modal-body">
+      <div class="compare-grid" id="compareGrid"></div>
+    </div>
+  </div>
+</div>
+
+
 <script>
+// ===================== DATA =====================
 const COMPANIES = [
   // ─── ORCHESTRATION / AGENT PLATFORMS ───────────────────────────────────────
   {
@@ -1259,221 +1324,617 @@ const COMPANIES = [
   }
 ];
 
-let map, activeFilter = 'all', markers = [], selectedMarker = null;
 
-function getCategoryClass(cat) {
-  const map = { orchestration: 'cat-orchestration', rpa: 'cat-rpa', voice: 'cat-voice', computer: 'cat-computer', local: 'cat-local', workflow: 'cat-workflow' };
-  return map[cat] || 'cat-orchestration';
+// ===================== LOGO SYSTEM =====================
+const LOGO_CACHE = {};
+
+function getDomain(url) {
+  try {
+    const u = new URL(url);
+    return u.hostname.replace(/^www\./, '');
+  } catch(e) { return null; }
 }
 
-function getCategoryLabel(cat) {
-  const labels = { orchestration: 'Orchestration', rpa: 'RPA+AI', voice: 'Voice', computer: 'Computer-Use', local: 'Local AI', workflow: 'Workflow' };
-  return labels[cat] || cat;
+function getLogoUrl(company, size) {
+  const sz = size || 64;
+  if (!company.website) return null;
+  const domain = getDomain(company.website);
+  if (!domain) return null;
+  // Primary: Clearbit
+  return 'https://logo.clearbit.com/' + domain + '?size=' + sz;
 }
 
-function getMarkerClass(cat) {
-  return `custom-marker marker-${cat}`;
+function getFaviconUrl(company) {
+  if (!company.website) return null;
+  const domain = getDomain(company.website);
+  if (!domain) return null;
+  return 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=64';
 }
 
-function initMap() {
-  map = L.map('map', {
-    center: [30, 10],
-    zoom: 2,
-    zoomControl: true,
-    attributionControl: true
-  });
+const CAT_COLORS = {
+  orchestration: '#6c63ff',
+  workflow: '#10b981',
+  rpa: '#f59e0b',
+  voice: '#3b82f6',
+  data: '#ec4899',
+  infrastructure: '#14b8a6',
+  vertical: '#f97316'
+};
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 20
-  }).addTo(map);
-
-  renderMarkers();
-  renderSidebar();
-
-  // Add IRIS marker
-  const irisIcon = L.divIcon({
-    html: `<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#6c63ff,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:18px;border:3px solid rgba(255,255,255,0.5);box-shadow:0 0 20px rgba(108,99,255,0.8),0 4px 15px rgba(0,0,0,0.5);animation:pulse 2s infinite;">🚀</div>`,
-    className: '',
-    iconSize: [44, 44],
-    iconAnchor: [22, 22]
-  });
-
-  const style = document.createElement('style');
-  style.textContent = '@keyframes pulse { 0%,100%{box-shadow:0 0 20px rgba(108,99,255,0.8)} 50%{box-shadow:0 0 40px rgba(108,99,255,1)} }';
-  document.head.appendChild(style);
-
-  L.marker([43.1566, -77.6088], { icon: irisIcon })
-    .addTo(map)
-    .bindTooltip('<strong>IRIS</strong><br>Rochester, NY · Your Platform', { permanent: false, direction: 'top' });
+function getCatColor(cat) {
+  return CAT_COLORS[cat] || '#6c63ff';
 }
 
-function createMarkerIcon(company) {
-  return L.divIcon({
-    html: `<div class="${getMarkerClass(company.category)}" title="${company.name}">${company.emoji}</div>`,
-    className: '',
-    iconSize: [36, 36],
-    iconAnchor: [18, 18]
-  });
+function getInitial(name) {
+  return (name || '?')[0].toUpperCase();
 }
 
-function renderMarkers() {
-  markers.forEach(m => m.remove());
-  markers = [];
+// Build a logo img element with multi-level fallback
+function buildLogoImg(company, size, className) {
+  const sz = size || 32;
+  const logoUrl = getLogoUrl(company, sz);
+  const faviconUrl = getFaviconUrl(company);
+  const color = getCatColor(company.category);
+  const initial = getInitial(company.name);
 
-  const filtered = COMPANIES.filter(c => activeFilter === 'all' || c.category === activeFilter);
-
-  filtered.forEach(company => {
-    const icon = createMarkerIcon(company);
-    const marker = L.marker([company.lat, company.lng], { icon })
-      .addTo(map)
-      .bindTooltip(`<strong>${company.emoji} ${company.name}</strong><br>${company.tagline}`, { direction: 'top', offset: [0, -20] })
-      .on('click', () => showDetail(company));
-    markers.push(marker);
-  });
-
-  document.getElementById('total-count').textContent = COMPANIES.length;
-  document.getElementById('funded-count').textContent = COMPANIES.filter(c => c.funding.total && c.funding.total !== '$' && c.funding.total !== 'N/A (Microsoft)' && c.funding.total !== 'N/A (Google)' && c.funding.total !== 'N/A (Amazon)' && c.funding.total !== 'N/A (ByteDance)').length;
+  if (logoUrl) {
+    return `<img src="${logoUrl}" class="${className || ''}" alt="${company.name}" width="${sz}" height="${sz}"
+      onerror="this.onerror=null;this.src='${faviconUrl}';this.onerror=function(){this.style.display='none';this.parentNode.innerHTML='<div class=\'letter-avatar\' style=\'background:${color}\'>${initial}</div>';}">`;
+  }
+  return `<div class="letter-avatar" style="background:${color}">${initial}</div>`;
 }
 
-function renderSidebar() {
-  const list = document.getElementById('company-list');
-  const search = document.getElementById('search-input').value.toLowerCase();
-  const filtered = COMPANIES.filter(c => {
-    const matchFilter = activeFilter === 'all' || c.category === activeFilter;
-    const matchSearch = !search || c.name.toLowerCase().includes(search) || c.tagline.toLowerCase().includes(search);
-    return matchFilter && matchSearch;
-  });
+// ===================== STATE =====================
+let map = null;
+let markers = {};
+let selectedCompanyId = null;
+let compareSet = new Set();
+let activeFilter = 'all';
+let searchQuery = '';
+let timelineYear = 2025;
+let deltaPanelVisible = false;
 
-  list.innerHTML = filtered.map(c => `
-    <div class="company-item" onclick="flyToCompany(${c.id})" id="item-${c.id}">
-      <div class="company-item-header">
-        <span class="company-emoji">${c.emoji}</span>
-        <span class="company-name">${c.name}</span>
-        <span class="category-badge ${getCategoryClass(c.category)}">${getCategoryLabel(c.category)}</span>
-      </div>
-      <div class="company-desc">${c.tagline}</div>
-      ${c.funding.total && c.funding.total !== '$' ? `<div class="funding-tag">💰 ${c.funding.total} · ${c.funding.round}</div>` : '' }
-    </div>
-  `).join('');
+// ===================== WEEKLY DELTAS (simulated) =====================
+const WEEKLY_DELTAS = {
+  funding: [
+    { id: 1, change: '+$25M Series B', direction: 'up' },
+    { id: 21, change: '+$180M Series C', direction: 'up' },
+    { id: 30, change: '+$50M Series B', direction: 'up' },
+    { id: 4, change: '+$12M Seed Ext.', direction: 'up' },
+  ],
+  products: [
+    { id: 9, change: 'AI Nodes 2.0 released', direction: 'new' },
+    { id: 11, change: 'Zapier Agents GA', direction: 'new' },
+    { id: 19, change: 'Vapi Squads launched', direction: 'new' },
+    { id: 14, change: 'Autopilot v3 update', direction: 'new' },
+  ],
+  github: [
+    { id: 1, change: '+2,400 stars', direction: 'up' },
+    { id: 9, change: '+1,800 stars', direction: 'up' },
+    { id: 12, change: '+950 stars', direction: 'up' },
+    { id: 6, change: '+680 stars', direction: 'up' },
+  ]
+};
+
+function getCompanyById(id) {
+  return COMPANIES.find(function(c) { return c.id === id; });
 }
 
-function flyToCompany(id) {
-  const company = COMPANIES.find(c => c.id === id);
-  if (!company) return;
+// ===================== DELTA PANEL =====================
+function renderDeltaPanel() {
+  const body = document.getElementById('deltaPanelBody');
+  if (!body) return;
 
-  document.querySelectorAll('.company-item').forEach(el => el.classList.remove('selected'));
-  const item = document.getElementById(`item-${id}`);
-  if (item) item.classList.add('selected');
+  function renderDeltaSection(title, items) {
+    const rows = items.map(function(item) {
+      const c = getCompanyById(item.id);
+      if (!c) return '';
+      const logoUrl = getLogoUrl(c, 24);
+      const faviconUrl = getFaviconUrl(c);
+      const color = getCatColor(c.category);
+      const initial = getInitial(c.name);
+      let logoHtml;
+      if (logoUrl) {
+        logoHtml = `<img src="${logoUrl}" width="24" height="24" style="width:100%;height:100%;object-fit:contain"
+          onerror="this.onerror=null;this.src='${faviconUrl}';this.onerror=function(){this.style.display='none';this.parentNode.innerHTML='<div class=\'letter-avatar\' style=\'background:${color};font-size:9px\' >${initial}</div>';}">`;
+      } else {
+        logoHtml = `<div class="letter-avatar" style="background:${color};font-size:9px">${initial}</div>`;
+      }
+      return `<div class="delta-item" onclick="selectCompany(${c.id})" style="cursor:pointer">
+        <div class="delta-logo">${logoHtml}</div>
+        <span class="delta-company">${c.name}</span>
+        <span class="delta-change ${item.direction}">${item.change}</span>
+      </div>`;
+    }).join('');
+    return `<div class="delta-section">
+      <div class="delta-section-title">${title}</div>
+      ${rows}
+    </div>`;
+  }
 
-  map.flyTo([company.lat, company.lng], 5, { duration: 1.2 });
-  setTimeout(() => showDetail(company), 800);
+  body.innerHTML =
+    renderDeltaSection('&#x1F4B0; New Funding Rounds', WEEKLY_DELTAS.funding) +
+    renderDeltaSection('&#x1F680; Product Releases', WEEKLY_DELTAS.products) +
+    renderDeltaSection('&#x2B50; GitHub Star Changes', WEEKLY_DELTAS.github);
 }
 
-function showDetail(company) {
-  const panel = document.getElementById('detail-panel');
-  const content = document.getElementById('detail-content');
+function toggleDeltaPanel() {
+  deltaPanelVisible = !deltaPanelVisible;
+  const panel = document.getElementById('deltaPanel');
+  if (deltaPanelVisible) {
+    panel.classList.add('visible');
+    renderDeltaPanel();
+  } else {
+    panel.classList.remove('visible');
+  }
+}
 
-  const hasFunding = company.funding.total && company.funding.total !== '$';
+// ===================== COMPARE MODE =====================
+function toggleCompare(id) {
+  if (compareSet.has(id)) {
+    compareSet.delete(id);
+  } else {
+    if (compareSet.size >= 5) {
+      alert('Maximum 5 companies for comparison');
+      return;
+    }
+    compareSet.add(id);
+  }
+  updateCompareUI();
+}
 
-  content.innerHTML = `
-    <div style="margin-bottom:16px">
-      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:12px">
-        <div class="popup-logo">${company.emoji}</div>
-        <div style="flex:1">
-          <div style="font-size:18px;font-weight:700;margin-bottom:4px">${company.name}</div>
-          <div style="font-size:12px;color:var(--text-muted);line-height:1.4">${company.tagline}</div>
-          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-            <span class="meta-chip chip-stage">${company.stage}</span>
-            <span class="meta-chip chip-founded">Founded ${company.founded}</span>
-            <span class="meta-chip chip-hq">📍 ${company.hq}</span>
-          </div>
-        </div>
-      </div>
-      <span class="category-badge ${getCategoryClass(company.category)}" style="font-size:11px">${getCategoryLabel(company.category)}</span>
-    </div>
+function updateCompareUI() {
+  const count = compareSet.size;
+  const badge = document.getElementById('compareBadge');
+  const btn = document.getElementById('compareBtn');
+  const stat = document.getElementById('compareModeStat');
+  if (badge) badge.textContent = count;
+  if (btn) btn.style.display = count > 0 ? 'inline-flex' : 'none';
+  if (stat) stat.style.display = count > 0 ? 'flex' : 'none';
+  renderSidebarList();
+  updateDetailPanelCompareBtn();
+}
 
-    ${hasFunding ? `
-    <div class="popup-section">
-      <div class="popup-section-title">💰 Funding</div>
-      <div class="funding-row">
+function updateDetailPanelCompareBtn() {
+  const btn = document.getElementById('detailCompareBtn');
+  if (!btn || !selectedCompanyId) return;
+  const inCompare = compareSet.has(selectedCompanyId);
+  btn.textContent = inCompare ? '− Remove from Compare' : '+ Add to Compare';
+  btn.className = 'add-to-compare-btn' + (inCompare ? ' remove' : '');
+}
+
+function openCompareModal() {
+  if (compareSet.size < 2) {
+    alert('Select at least 2 companies to compare');
+    return;
+  }
+  renderCompareGrid();
+  document.getElementById('compareOverlay').classList.add('visible');
+}
+
+function closeCompareModal(e) {
+  if (!e || e.target === document.getElementById('compareOverlay')) {
+    document.getElementById('compareOverlay').classList.remove('visible');
+  }
+}
+
+function clearCompare() {
+  compareSet.clear();
+  updateCompareUI();
+  closeCompareModal();
+}
+
+function renderCompareGrid() {
+  const grid = document.getElementById('compareGrid');
+  if (!grid) return;
+  const companies = Array.from(compareSet).map(getCompanyById).filter(Boolean);
+  grid.style.setProperty('--cols', companies.length);
+
+  grid.innerHTML = companies.map(function(c) {
+    const logoUrl = getLogoUrl(c, 44);
+    const faviconUrl = getFaviconUrl(c);
+    const color = getCatColor(c.category);
+    const initial = getInitial(c.name);
+    let logoHtml;
+    if (logoUrl) {
+      logoHtml = `<img src="${logoUrl}" width="44" height="44" style="width:100%;height:100%;object-fit:contain"
+        onerror="this.onerror=null;this.src='${faviconUrl}';this.onerror=function(){this.style.display='none';this.parentNode.innerHTML='<div class=\'letter-avatar\' style=\'background:${color}\' >${initial}</div>';}">`;
+    } else {
+      logoHtml = `<div class="letter-avatar" style="background:${color}">${initial}</div>`;
+    }
+
+    const products = (c.products || []).slice(0, 3).map(function(p) {
+      return `<div style="font-size:11px;color:var(--text-muted);margin-top:3px">&#x2022; ${p.name}</div>`;
+    }).join('');
+
+    const stageColor = c.stage && c.stage.includes('Public') ? 'var(--green)' :
+      c.stage && c.stage.includes('Series') ? 'var(--blue)' :
+      c.stage === 'Profitable' ? 'var(--green)' : 'var(--yellow)';
+
+    return `<div class="compare-card">
+      <div class="compare-card-header">
+        <div class="compare-card-logo">${logoHtml}</div>
         <div>
-          <div class="funding-amount">${company.funding.total}</div>
-          <div class="funding-details">${company.funding.round} · ${company.funding.date}</div>
+          <div class="compare-card-name">${c.name}</div>
+          <div class="compare-card-stage" style="color:${stageColor}">${c.stage || 'Unknown'}</div>
         </div>
-        <div style="text-align:right;font-size:11px;color:var(--text-muted)">${company.funding.investors}</div>
       </div>
-    </div>
-    ` : '' }
-
-    <div class="popup-section">
-      <div class="popup-section-title">🚀 Products</div>
-      <div class="product-list">
-        ${company.products.map(p => `
-          <div class="product-item">
-            <div class="product-name">${p.name}</div>
-            <div class="product-desc">${p.desc}</div>
-          </div>
-        `).join('')}
+      <div class="compare-row">
+        <div class="compare-field">
+          <div class="compare-field-label">Category</div>
+          <div class="compare-field-value" style="color:${color}">${c.category}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Founded</div>
+          <div class="compare-field-value">${c.founded || 'N/A'}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Total Funding</div>
+          <div class="compare-field-value green">${c.funding ? c.funding.total : 'N/A'}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Stage</div>
+          <div class="compare-field-value" style="color:${stageColor}">${c.stage || 'N/A'}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Headquarters</div>
+          <div class="compare-field-value">${c.hq || 'N/A'}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Latest Round</div>
+          <div class="compare-field-value yellow">${c.funding ? (c.funding.round + '  ' + (c.funding.date || '')) : 'N/A'}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Investors</div>
+          <div class="compare-field-value" style="font-size:12px;font-weight:500">${c.funding ? (c.funding.investors || 'N/A') : 'N/A'}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Key Products</div>
+          <div class="compare-field-value" style="font-size:12px;font-weight:400">${products}</div>
+        </div>
+        <div class="compare-field">
+          <div class="compare-field-label">Latest News</div>
+          <div class="compare-field-value" style="font-size:11px;font-weight:400;color:var(--text-muted);line-height:1.4">${c.news || 'N/A'}</div>
+        </div>
       </div>
-    </div>
-
-    ${company.news ? `
-    <div class="popup-section">
-      <div class="popup-section-title">📰 Latest News</div>
-      <div style="background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-muted);line-height:1.5">${company.news}</div>
-    </div>
-    ` : '' }
-
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-      <a href="${company.website}" target="_blank" rel="noopener" class="popup-link primary">🌐 Website</a>
-      ${company.github ? `<a href="${company.github}" target="_blank" rel="noopener" class="popup-link">⭐ GitHub</a>` : '' }
-      <a href="https://www.crunchbase.com/organization/${company.name.toLowerCase().split(' ').join('-').split('(').join('').split(')').join('')}" target="_blank" rel="noopener" class="popup-link">📊 Crunchbase</a>
-    </div>
-  `;
-
-  panel.classList.add('visible');
+    </div>`;
+  }).join('');
 }
 
-function closePanel() {
-  document.getElementById('detail-panel').classList.remove('visible');
-  document.querySelectorAll('.company-item').forEach(el => el.classList.remove('selected'));
+// ===================== TIMELINE =====================
+function onTimelineChange(val) {
+  timelineYear = parseInt(val, 10);
+  document.getElementById('timelineValue').textContent = timelineYear === 2025 ? 'All' : '≤ ' + timelineYear;
+  const min = 2001, max = 2025;
+  const pct = ((timelineYear - min) / (max - min) * 100).toFixed(1) + '%';
+  document.getElementById('timelineSlider').style.setProperty('--pct', pct);
+  updateMapMarkers();
+  renderSidebarList();
 }
 
-function setFilter(cat, btn) {
+// ===================== FILTER / SEARCH =====================
+function setCategoryFilter(btn, cat) {
   activeFilter = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
-  renderMarkers();
-  renderSidebar();
+  updateMapMarkers();
+  renderSidebarList();
 }
 
 function filterCompanies() {
-  renderSidebar();
+  searchQuery = document.getElementById('searchBox').value.toLowerCase();
+  updateMapMarkers();
+  renderSidebarList();
 }
 
-function refreshData() {
-  const btn = document.querySelector('.btn-refresh');
-  btn.textContent = '⟳ Refreshing...';
-  btn.disabled = true;
-  setTimeout(() => {
-    btn.textContent = '⟳ Refresh Data';
-    btn.disabled = false;
-    alert('Data is up to date! (Jan 2025)\n\nTo pull live data, run:\n  python refresh_data.py');
-  }, 1500);
+function getVisibleCompanies() {
+  return COMPANIES.filter(function(c) {
+    if (activeFilter !== 'all' && c.category !== activeFilter) return false;
+    if (timelineYear < 2025 && c.founded && c.founded > timelineYear) return false;
+    if (searchQuery) {
+      const q = searchQuery;
+      if (c.name.toLowerCase().indexOf(q) === -1 &&
+          (c.tagline || '').toLowerCase().indexOf(q) === -1 &&
+          (c.category || '').toLowerCase().indexOf(q) === -1 &&
+          (c.hq || '').toLowerCase().indexOf(q) === -1) return false;
+    }
+    return true;
+  });
 }
 
-// Init
-document.addEventListener('DOMContentLoaded', () => {
+// ===================== SIDEBAR =====================
+function renderSidebarList() {
+  const list = document.getElementById('sidebarList');
+  if (!list) return;
+  const visible = getVisibleCompanies();
+
+  list.innerHTML = visible.map(function(c) {
+    const isSelected = selectedCompanyId === c.id;
+    const inCompare = compareSet.has(c.id);
+    const logoUrl = getLogoUrl(c, 28);
+    const faviconUrl = getFaviconUrl(c);
+    const color = getCatColor(c.category);
+    const initial = getInitial(c.name);
+    let logoHtml;
+    if (logoUrl) {
+      logoHtml = `<img src="${logoUrl}" width="28" height="28" style="width:100%;height:100%;object-fit:contain"
+        onerror="this.onerror=null;this.src='${faviconUrl}';this.onerror=function(){this.style.display='none';this.parentNode.innerHTML='<div class=\'letter-avatar\' style=\'background:${color}\' >${initial}</div>';}">`;
+    } else {
+      logoHtml = `<div class="letter-avatar" style="background:${color}">${initial}</div>`;
+    }
+
+    return `<div class="company-item ${isSelected ? 'selected' : ''}${inCompare ? ' in-compare' : ''}" onclick="selectCompany(${c.id})">
+      <div class="company-logo-sm">${logoHtml}</div>
+      <div class="company-info">
+        <div class="company-name">${c.name}</div>
+        <div class="company-meta">${c.stage || ''}${c.hq ? ' · ' + c.hq.split(',')[0] : '' }</div>
+      </div>
+      <div class="company-cat-dot dot-${c.category}"></div>
+      <div class="compare-check ${inCompare ? 'checked' : ''}" onclick="event.stopPropagation();toggleCompare(${c.id})">
+        ${inCompare ? '✓' : '+'}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Update stats
+  document.getElementById('statCount').textContent = visible.length;
+  let totalFunding = 0;
+  visible.forEach(function(c) {
+    if (c.funding && c.funding.total) {
+      const t = c.funding.total;
+      const m = t.match(/\$([\d.]+)([BMK]?)/);
+      if (m) {
+        let v = parseFloat(m[1]);
+        if (m[2] === 'B') v *= 1000;
+        else if (m[2] === 'K') v /= 1000;
+        totalFunding += v;
+      }
+    }
+  });
+  const fStr = totalFunding >= 1000 ? '$' + (totalFunding/1000).toFixed(1) + 'B' : '$' + Math.round(totalFunding) + 'M';
+  document.getElementById('statFunding').textContent = fStr;
+}
+
+// ===================== MAP MARKERS =====================
+function updateMapMarkers() {
+  if (!map) return;
+  const visible = getVisibleCompanies();
+  const visibleIds = new Set(visible.map(function(c) { return c.id; }));
+
+  // Remove hidden markers
+  Object.keys(markers).forEach(function(id) {
+    const numId = parseInt(id, 10);
+    if (!visibleIds.has(numId)) {
+      map.removeLayer(markers[id]);
+      delete markers[id];
+    }
+  });
+
+  // Add/update visible markers
+  visible.forEach(function(c) {
+    if (!markers[c.id]) {
+      addMarker(c);
+    }
+  });
+}
+
+function addMarker(c) {
+  const color = getCatColor(c.category);
+  const initial = getInitial(c.name);
+  const logoUrl = getLogoUrl(c, 36);
+  const faviconUrl = getFaviconUrl(c);
+
+  let imgTag;
+  if (logoUrl) {
+    imgTag = `<img src="${logoUrl}" style="width:100%;height:100%;object-fit:contain"
+      onerror="this.onerror=null;this.src='${faviconUrl}';this.onerror=function(){this.style.display='none';this.parentNode.style.background='${color}';this.parentNode.innerHTML='<div class=\'letter-avatar\' style=\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:white\'>${initial}</div>';}">`;
+  } else {
+    imgTag = `<div class="letter-avatar" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:white;background:${color}">${initial}</div>`;
+  }
+
+  const iconHtml = `<div class="logo-marker" style="border-color:${color}">${imgTag}</div>`;
+
+  const icon = L.divIcon({
+    html: iconHtml,
+    className: '',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -20]
+  });
+
+  const marker = L.marker([c.lat, c.lng], { icon: icon });
+
+  marker.bindPopup(function() {
+    return `<div class="lp-name">${c.name}</div>
+      <div class="lp-cat" style="color:${color}">${c.category}</div>
+      <div class="lp-funding">${c.funding ? c.funding.total : 'N/A'}</div>
+      <button class="lp-btn" onclick="selectCompany(${c.id})">View Details &#x2192;</button>`;
+  }, { maxWidth: 220 });
+
+  marker.on('click', function() {
+    selectCompany(c.id);
+  });
+
+  marker.addTo(map);
+  markers[c.id] = marker;
+}
+
+// ===================== DETAIL PANEL =====================
+function selectCompany(id) {
+  selectedCompanyId = id;
+  const c = getCompanyById(id);
+  if (!c) return;
+
+  // Pan map
+  if (map && markers[id]) {
+    map.setView([c.lat, c.lng], Math.max(map.getZoom(), 5), { animate: true });
+  }
+
+  // Highlight sidebar
+  renderSidebarList();
+
+  // Render detail panel
+  renderDetailPanel(c);
+  document.getElementById('detailPanel').classList.add('visible');
+}
+
+function renderDetailPanel(c) {
+  const color = getCatColor(c.category);
+  const initial = getInitial(c.name);
+  const logoUrl = getLogoUrl(c, 52);
+  const faviconUrl = getFaviconUrl(c);
+  const inCompare = compareSet.has(c.id);
+
+  let logoHtml;
+  if (logoUrl) {
+    logoHtml = `<img src="${logoUrl}" width="52" height="52" style="width:100%;height:100%;object-fit:contain"
+      onerror="this.onerror=null;this.src='${faviconUrl}';this.onerror=function(){this.style.display='none';this.parentNode.innerHTML='<div class=\'letter-avatar\' style=\'background:${color}\' >${initial}</div>';}">`;
+  } else {
+    logoHtml = `<div class="letter-avatar" style="background:${color}">${initial}</div>`;
+  }
+
+  const stageColor = c.stage && c.stage.includes('Public') ? 'var(--green)' :
+    c.stage && c.stage.includes('Series') ? 'var(--blue)' :
+    c.stage === 'Profitable' ? 'var(--green)' : 'var(--yellow)';
+
+  const products = (c.products || []).map(function(p) {
+    return `<div class="product-item">
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.desc}</div>
+    </div>`;
+  }).join('');
+
+  const links = [];
+  if (c.website) links.push(`<a href="${c.website}" target="_blank" class="popup-link primary">&#x1F310; Website</a>`);
+  if (c.github) links.push(`<a href="${c.github}" target="_blank" class="popup-link">&#x1F4BB; GitHub</a>`);
+
+  document.getElementById('detailPanelContent').innerHTML = `
+    <div class="panel-header">
+      <div class="panel-logo">${logoHtml}</div>
+      <div class="panel-title-area">
+        <div class="panel-name">${c.name}</div>
+        <div class="panel-tagline">${c.tagline || '' }</div>
+      </div>
+      <button class="panel-close" onclick="closeDetailPanel()">&#x2715;</button>
+    </div>
+    <div class="panel-body">
+      <div class="popup-section">
+        <div class="popup-section-title">Overview</div>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Founded</div>
+            <div class="meta-value">${c.founded || 'N/A'}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Stage</div>
+            <div class="meta-value" style="color:${stageColor}">${c.stage || 'N/A'}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Category</div>
+            <div class="meta-value" style="color:${color}">${c.category}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">HQ</div>
+            <div class="meta-value" style="font-size:12px">${c.hq || 'N/A'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup-section">
+        <div class="popup-section-title">Funding</div>
+        <div class="funding-row">
+          <div>
+            <div class="funding-amount">${c.funding ? c.funding.total : 'N/A'}</div>
+            <div class="funding-details">${c.funding ? (c.funding.round + (c.funding.date ? ' · ' + c.funding.date : '')) : '' }</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;color:var(--text-muted)">Investors</div>
+            <div style="font-size:12px;font-weight:600;max-width:140px;text-align:right">${c.funding ? (c.funding.investors || 'N/A') : 'N/A'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup-section">
+        <div class="popup-section-title">Products</div>
+        <div class="product-list">${products}</div>
+      </div>
+
+      <div class="popup-section">
+        <div class="popup-section-title">Latest News</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.5">${c.news || 'No recent news'}</div>
+      </div>
+
+      <div class="popup-section">
+        <div class="popup-section-title">Links</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${links.join('')}</div>
+      </div>
+
+      <button class="add-to-compare-btn ${inCompare ? 'remove' : ''}" id="detailCompareBtn"
+        onclick="toggleCompare(${c.id});updateDetailPanelCompareBtn()">
+        ${inCompare ? '− Remove from Compare' : '+ Add to Compare'}
+      </button>
+    </div>
+  `;
+}
+
+function closeDetailPanel() {
+  document.getElementById('detailPanel').classList.remove('visible');
+  selectedCompanyId = null;
+  renderSidebarList();
+}
+
+// ===================== MAP INIT =====================
+function initMap() {
+  map = L.map('map', {
+    center: [30, 10],
+    zoom: 3,
+    zoomControl: false,
+    attributionControl: false
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CartoDB',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  // Add all markers
+  COMPANIES.forEach(function(c) { addMarker(c); });
+
+  // Fix container sizing
+  setTimeout(function() {
+    map.invalidateSize();
+  }, 300);
+
+  // ResizeObserver for reliable sizing
+  if (typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(function() {
+      if (map) map.invalidateSize();
+    });
+    ro.observe(document.getElementById('mapContainer'));
+  }
+}
+
+function resetView() {
+  if (map) map.setView([30, 10], 3, { animate: true });
+  closeDetailPanel();
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', function() {
   initMap();
-  // Ensure map renders correctly after layout settles
-  setTimeout(() => { if(map) map.invalidateSize(); }, 300);
-  setTimeout(() => {
+  renderSidebarList();
+
+  // Hide loading
+  setTimeout(function() {
     const loading = document.getElementById('loading');
-    loading.classList.add('hidden');
-    setTimeout(() => loading.remove(), 500);
-  }, 1200);
+    if (loading) {
+      loading.classList.add('hidden');
+      setTimeout(function() { loading.style.display = 'none'; }, 500);
+    }
+  }, 800);
 });
 </script>
 </body>
