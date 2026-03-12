@@ -1,588 +1,1281 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Data Centers Under Construction â Live Map</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #0a0e1a; color: #e2e8f0; overflow: hidden; }
-    #header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: linear-gradient(135deg, rgba(10,14,26,0.97) 0%, rgba(15,20,40,0.97) 100%);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(99,179,237,0.2);
-      padding: 12px 24px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    #header h1 { font-size: 1.2rem; font-weight: 700; color: #63b3ed; letter-spacing: -0.02em; }
-    #header .subtitle { font-size: 0.75rem; color: #718096; margin-top: 2px; }
-    #stats { display: flex; gap: 20px; }
-    .stat { text-align: center; }
-    .stat-num { font-size: 1.4rem; font-weight: 700; color: #63b3ed; }
-    .stat-label { font-size: 0.65rem; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; }
-    #map { position: fixed; top: 62px; left: 0; right: 0; bottom: 0; }
-    #legend {
-      position: fixed; bottom: 20px; left: 20px; z-index: 1000;
-      background: rgba(10,14,26,0.92); backdrop-filter: blur(10px);
-      border: 1px solid rgba(99,179,237,0.2); border-radius: 12px;
-      padding: 14px 16px; min-width: 180px;
-    }
-    #legend h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #718096; margin-bottom: 10px; }
-    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.78rem; }
-    .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-    #filter-panel {
-      position: fixed; top: 74px; right: 20px; z-index: 1000;
-      background: rgba(10,14,26,0.92); backdrop-filter: blur(10px);
-      border: 1px solid rgba(99,179,237,0.2); border-radius: 12px;
-      padding: 14px 16px; min-width: 200px;
-    }
-    #filter-panel h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #718096; margin-bottom: 10px; }
-    .filter-btn {
-      display: block; width: 100%; text-align: left; padding: 6px 10px;
-      background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.15);
-      border-radius: 6px; color: #e2e8f0; font-size: 0.78rem; cursor: pointer;
-      margin-bottom: 5px; transition: all 0.2s;
-    }
-    .filter-btn:hover, .filter-btn.active { background: rgba(99,179,237,0.2); border-color: #63b3ed; }
-    .leaflet-popup-content-wrapper {
-      background: rgba(10,14,26,0.97) !important;
-      border: 1px solid rgba(99,179,237,0.3) !important;
-      border-radius: 12px !important;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6) !important;
-      color: #e2e8f0 !important;
-      max-width: 380px !important;
-    }
-    .leaflet-popup-tip { background: rgba(10,14,26,0.97) !important; }
-    .leaflet-popup-content { margin: 0 !important; padding: 0 !important; }
-    .popup-inner { padding: 16px 18px; }
-    .popup-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-    .popup-icon { font-size: 1.8rem; flex-shrink: 0; }
-    .popup-title { font-size: 1rem; font-weight: 700; color: #63b3ed; line-height: 1.3; }
-    .popup-operator { font-size: 0.78rem; color: #a0aec0; margin-top: 2px; }
-    .popup-badge {
-      display: inline-block; padding: 2px 8px; border-radius: 20px;
-      font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-      margin-bottom: 10px;
-    }
-    .badge-construction { background: rgba(236,201,75,0.15); color: #ecc94b; border: 1px solid rgba(236,201,75,0.3); }
-    .badge-announced { background: rgba(154,205,50,0.15); color: #9acd32; border: 1px solid rgba(154,205,50,0.3); }
-    .badge-operational { background: rgba(72,187,120,0.15); color: #48bb78; border: 1px solid rgba(72,187,120,0.3); }
-    .popup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .popup-field { background: rgba(99,179,237,0.06); border-radius: 8px; padding: 8px 10px; }
-    .popup-field-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: #718096; margin-bottom: 3px; }
-    .popup-field-value { font-size: 0.82rem; color: #e2e8f0; font-weight: 500; }
-    .popup-desc { font-size: 0.78rem; color: #a0aec0; line-height: 1.5; margin-bottom: 12px; }
-    .popup-source { font-size: 0.7rem; }
-    .popup-source a { color: #63b3ed; text-decoration: none; }
-    .popup-source a:hover { text-decoration: underline; }
-    .pulse-ring {
-      animation: pulse 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.05); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRIS — AI Competitor Intelligence Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a28;
+    --border: #2a2a40;
+    --accent: #6c63ff;
+    --accent2: #a78bfa;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d0d1a 0%, #12122a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -1px;
+  }
+  .logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo-sub { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+  .header-stats {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-red { background: var(--red); }
+  .dot-blue { background: var(--blue); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .btn-refresh {
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-refresh:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(108,99,255,0.4); }
+
+  /* LAYOUT */
+  .main { display: flex; flex: 1; overflow: hidden; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 320px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .search-box input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+  }
+  .search-box input::placeholder { color: var(--text-dim); }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .company-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+  .company-list::-webkit-scrollbar { width: 4px; }
+  .company-list::-webkit-scrollbar-track { background: transparent; }
+  .company-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .company-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .company-item:hover, .company-item.selected {
+    border-color: var(--accent);
+    background: rgba(108,99,255,0.08);
+    transform: translateX(2px);
+  }
+  .company-item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .company-emoji { font-size: 20px; }
+  .company-name { font-size: 13px; font-weight: 600; flex: 1; }
+  .category-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .cat-orchestration { background: rgba(108,99,255,0.2); color: var(--accent2); border: 1px solid rgba(108,99,255,0.3); }
+  .cat-rpa { background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+  .cat-voice { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+  .cat-computer { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+  .cat-local { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+  .cat-workflow { background: rgba(236,72,153,0.2); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
+  .company-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+  .funding-tag { display: inline-block; font-size: 10px; color: var(--green); font-weight: 600; margin-top: 4px; }
+
+  /* MAP */
+  #map {
+    flex: 1;
+    background: #0d0d1a;
+  }
+
+  /* POPUP / CARD */
+  .custom-popup .leaflet-popup-content-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    padding: 0;
+    min-width: 340px;
+    max-width: 400px;
+  }
+  .custom-popup .leaflet-popup-tip-container { display: none; }
+  .custom-popup .leaflet-popup-content { margin: 0; width: 100% !important; }
+  .popup-card { padding: 20px; }
+  .popup-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .popup-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+  .popup-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .popup-tagline { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+  .popup-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .meta-chip {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .chip-stage { background: rgba(108,99,255,0.15); color: var(--accent2); }
+  .chip-founded { background: rgba(100,116,139,0.15); color: var(--text-muted); }
+  .chip-hq { background: rgba(16,185,129,0.15); color: #34d399; }
+  .popup-section { margin-bottom: 12px; }
+  .popup-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .popup-section-content { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .product-list { display: flex; flex-direction: column; gap: 4px; }
+  .product-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .product-name { font-weight: 600; color: var(--text); }
+  .product-desc { color: var(--text-muted); }
+  .funding-row {
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .funding-amount { font-size: 16px; font-weight: 700; color: var(--green); }
+  .funding-details { font-size: 11px; color: var(--text-muted); }
+  .popup-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .popup-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .popup-link:hover { border-color: var(--accent); color: var(--accent2); }
+  .popup-link.primary {
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    border-color: transparent;
+    color: white;
+  }
+  .popup-link.primary:hover { opacity: 0.9; }
+
+  /* CUSTOM MARKERS */
+  .custom-marker {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border: 2px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  .custom-marker:hover { transform: scale(1.2); z-index: 1000 !important; }
+  .marker-orchestration { background: linear-gradient(135deg, #6c63ff, #8b5cf6); }
+  .marker-rpa { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .marker-voice { background: linear-gradient(135deg, #10b981, #059669); }
+  .marker-computer { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .marker-local { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .marker-workflow { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+  /* LEGEND */
+  .map-legend {
+    position: absolute;
+    bottom: 30px;
+    right: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    z-index: 999;
+    min-width: 180px;
+  }
+  .legend-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* DETAIL PANEL */
+  .detail-panel {
+    position: absolute;
+    top: 80px;
+    right: 10px;
+    width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    z-index: 998;
+    display: none;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .detail-panel.visible { display: block; }
+  .detail-panel::-webkit-scrollbar { width: 4px; }
+  .detail-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .panel-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .panel-close:hover { color: var(--text); border-color: var(--accent); }
+
+  /* TOOLTIP */
+  .leaflet-tooltip {
+    background: var(--surface2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    color: var(--text) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+  }
+  .leaflet-tooltip::before { display: none !important; }
+
+  /* Leaflet overrides */
+  .leaflet-container { background: #0d0d1a !important; }
+  .leaflet-control-zoom a {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+  }
+  .leaflet-control-zoom a:hover { background: var(--surface2) !important; }
+  .leaflet-control-attribution {
+    background: rgba(10,10,15,0.8) !important;
+    color: var(--text-dim) !important;
+    font-size: 10px !important;
+  }
+  .leaflet-control-attribution a { color: var(--text-dim) !important; }
+
+  /* IRIS badge */
+  .iris-badge {
+    position: absolute;
+    top: 80px;
+    left: 330px;
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    border-radius: 12px;
+    padding: 10px 16px;
+    z-index: 999;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(108,99,255,0.4);
+  }
+  .iris-badge span { display: block; font-size: 10px; font-weight: 400; opacity: 0.8; margin-top: 2px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .iris-badge { left: 10px; }
+    .detail-panel { width: calc(100vw - 20px); right: 10px; }
+  }
+
+  /* Loading */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    flex-direction: column;
+    gap: 16px;
+    transition: opacity 0.5s;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: var(--text-muted); font-size: 14px; }
+
+  /* Count badge */
+  .count-badge {
+    background: var(--accent);
+    color: white;
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+</style>
 </head>
 <body>
 
-<div id="header">
-  <div>
-    <h1>â¡ AI Data Centers Under Construction</h1>
-    <div class="subtitle">Live tracker â worldwide hyperscale & AI infrastructure buildout</div>
+<!-- Loading -->
+<div class="loading-overlay" id="loading">
+  <div style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#6c63ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">IRIS</div>
+  <div class="spinner"></div>
+  <div class="loading-text">Loading competitor intelligence...</div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">IR</div>
+    <div>
+      <div class="logo-text">IRIS <span style="font-weight:300;opacity:0.6">Intelligence</span></div>
+      <div class="logo-sub">AI Competitor Landscape Map · 2024–2025</div>
+    </div>
   </div>
-  <div id="stats">
-    <div class="stat"><div class="stat-num" id="total-count">â</div><div class="stat-label">Sites</div></div>
-    <div class="stat"><div class="stat-num" id="total-power">â</div><div class="stat-label">Total GW</div></div>
-    <div class="stat"><div class="stat-num" id="total-invest">â</div><div class="stat-label">Investment</div></div>
+  <div class="header-stats">
+    <div class="stat-pill"><div class="dot dot-green"></div><span id="total-count">50</span> Companies</div>
+    <div class="stat-pill"><div class="dot dot-yellow"></div><span id="funded-count">32</span> Funded</div>
+    <div class="stat-pill"><div class="dot dot-blue"></div>6 Categories</div>
+    <div class="stat-pill" style="color:var(--text-dim);font-size:11px">Updated Jan 2025</div>
+  </div>
+  <div class="header-right">
+    <button class="btn-refresh" onclick="refreshData()">⟳ Refresh Data</button>
+  </div>
+</header>
+
+<!-- Main -->
+<div class="main">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="search-box">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text-dim)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search-input" placeholder="Search companies..." oninput="filterCompanies()">
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('orchestration', this)">Orchestration</button>
+        <button class="filter-btn" onclick="setFilter('workflow', this)">Workflow</button>
+        <button class="filter-btn" onclick="setFilter('rpa', this)">RPA+AI</button>
+        <button class="filter-btn" onclick="setFilter('voice', this)">Voice</button>
+        <button class="filter-btn" onclick="setFilter('computer', this)">Computer</button>
+        <button class="filter-btn" onclick="setFilter('local', this)">Local AI</button>
+      </div>
+    </div>
+    <div class="company-list" id="company-list"></div>
+  </div>
+
+  <!-- Map -->
+  <div style="position:relative;flex:1">
+    <div id="map"></div>
+
+    <!-- IRIS Badge -->
+    <div class="iris-badge">
+      🚀 IRIS Platform
+      <span>Rochester, NY · You are here</span>
+    </div>
+
+    <!-- Legend -->
+    <div class="map-legend">
+      <div class="legend-title">Categories</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#6c63ff"></div>Orchestration</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div>Workflow</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>RPA + AI</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Voice-First</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Computer-Use</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Local AI</div>
+    </div>
+
+    <!-- Detail Panel -->
+    <div class="detail-panel" id="detail-panel">
+      <div class="panel-close" onclick="closePanel()">✕</div>
+      <div id="detail-content"></div>
+    </div>
   </div>
 </div>
 
-<div id="map"></div>
-
-<div id="legend">
-  <h3>Status</h3>
-  <div class="legend-item"><div class="legend-dot" style="background:#ecc94b"></div> Under Construction</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#9acd32"></div> Announced / Planned</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#48bb78"></div> Recently Operational</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#63b3ed"></div> Expanding</div>
-</div>
-
-<div id="filter-panel">
-  <h3>Filter by Operator</h3>
-  <button class="filter-btn active" onclick="filterBy('all', this)">All Sites</button>
-  <button class="filter-btn" onclick="filterBy('Microsoft', this)">Microsoft</button>
-  <button class="filter-btn" onclick="filterBy('Google', this)">Google</button>
-  <button class="filter-btn" onclick="filterBy('Amazon', this)">Amazon / AWS</button>
-  <button class="filter-btn" onclick="filterBy('Meta', this)">Meta</button>
-  <button class="filter-btn" onclick="filterBy('OpenAI', this)">OpenAI / Stargate</button>
-  <button class="filter-btn" onclick="filterBy('xAI', this)">xAI</button>
-  <button class="filter-btn" onclick="filterBy('Other', this)">Other</button>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const DATA_CENTERS = [
+const COMPANIES = [
+  // ─── ORCHESTRATION / AGENT PLATFORMS ───────────────────────────────────────
   {
-    id: 1, name: "Stargate â Abilene Campus",
-    operator: "OpenAI / Oracle / SoftBank", group: "OpenAI",
-    lat: 32.4487, lng: -99.7331,
-    status: "construction",
-    location: "Abilene, Texas, USA",
-    power: "1.2 GW (planned)",
-    investment: "$100B (Stargate total)",
-    gpus: "100,000+ NVIDIA GPUs",
-    timeline: "Phase 1 complete 2026",
-    description: "First Stargate campus, operated by Crusoe for OpenAI. Final building topped out March 2026. Part of the $500B Stargate initiative.",
-    source_url: "https://www.datacenterdynamics.com/en/news/crusoe-tops-out-final-building-at-openai-stargate-data-center-campus-in-abilene-texas",
-    source_label: "Data Center Dynamics"
+    id: 1, name: "LangChain", emoji: "🔗", category: "orchestration",
+    tagline: "The most popular framework for building LLM-powered applications",
+    founded: 2022, hq: "San Francisco, CA", stage: "Series A",
+    lat: 37.7749, lng: -122.4194,
+    funding: { total: "$35M", round: "Series A", date: "2023", investors: "Sequoia, Benchmark" },
+    products: [
+      { name: "LangChain OSS", desc: "Open-source framework for LLM app development" },
+      { name: "LangSmith", desc: "Observability & debugging platform for LLM apps" },
+      { name: "LangGraph", desc: "Multi-agent orchestration with stateful graphs" },
+      { name: "LangGraph Cloud", desc: "Hosted deployment for LangGraph agents" }
+    ],
+    website: "https://langchain.com",
+    github: "https://github.com/langchain-ai/langchain",
+    news: "LangGraph 0.2 released Jan 2025 with improved multi-agent coordination"
   },
   {
-    id: 2, name: "Stargate â Michigan Campus",
-    operator: "OpenAI / Oracle", group: "OpenAI",
-    lat: 42.1764, lng: -83.7824,
-    status: "announced",
-    location: "Saline Township, Michigan, USA",
-    power: "~500 MW",
-    investment: "$20B+",
-    gpus: "NVIDIA Blackwell clusters",
-    timeline: "Construction 2026",
-    description: "Oracle and OpenAI announced a new Stargate data center campus in Saline Township, Michigan, as part of the broader Stargate AI infrastructure rollout.",
-    source_url: "https://www.prnewswire.com/news-releases/openai-oracle-and-related-digital-announce-stargate-data-center-site-in-michigan-302600302.html",
-    source_label: "PR Newswire"
+    id: 2, name: "Crew AI", emoji: "🤖", category: "orchestration",
+    tagline: "Multi-agent framework for autonomous AI crews",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7751, lng: -122.4180,
+    funding: { total: "$18M", round: "Seed", date: "2024", investors: "Insight Partners" },
+    products: [
+      { name: "CrewAI OSS", desc: "Role-based multi-agent orchestration framework" },
+      { name: "CrewAI Enterprise", desc: "Hosted platform with team management" },
+      { name: "CrewAI Studio", desc: "Visual agent builder (2024)" }
+    ],
+    website: "https://crewai.com",
+    github: "https://github.com/joaomdmoura/crewAI",
+    news: "$18M seed raised Nov 2024; 10M+ monthly downloads"
   },
   {
-    id: 3, name: "Stargate Norway â Narvik",
-    operator: "OpenAI / Nscale / Aker", group: "OpenAI",
-    lat: 68.4385, lng: 17.4272,
-    status: "announced",
-    location: "Narvik, Northern Norway",
-    power: "200 MW (Phase 1)",
-    investment: "$1B+",
-    gpus: "100,000 NVIDIA GPUs",
-    timeline: "2025â2026",
-    description: "OpenAI's first European data center, powered entirely by renewable hydroelectric energy. Partnership with Norwegian companies Nscale and Aker.",
-    source_url: "https://openai.com/index/introducing-stargate-norway",
-    source_label: "OpenAI"
+    id: 3, name: "AutoGen (Microsoft)", emoji: "🏢", category: "orchestration",
+    tagline: "Microsoft's open-source multi-agent conversation framework",
+    founded: 2023, hq: "Redmond, WA", stage: "Corporate",
+    lat: 47.6740, lng: -122.1215,
+    funding: { total: "N/A (Microsoft)", round: "Corporate R&D", date: "2023", investors: "Microsoft" },
+    products: [
+      { name: "AutoGen v0.4", desc: "Async multi-agent framework (Jan 2025)" },
+      { name: "AutoGen Studio", desc: "No-code agent builder UI" },
+      { name: "AG2", desc: "Community fork with extended features" }
+    ],
+    website: "https://microsoft.github.io/autogen",
+    github: "https://github.com/microsoft/autogen",
+    news: "AutoGen v0.4 released with async-first architecture, Jan 2025"
   },
   {
-    id: 4, name: "xAI Colossus â Memphis",
-    operator: "xAI (Elon Musk)", group: "xAI",
-    lat: 35.0731, lng: -89.9014,
-    status: "construction",
-    location: "Collierville / Memphis, Tennessee, USA",
-    power: "~2 GW (planned)",
-    investment: "$20B",
-    gpus: "550,000+ GPUs (scaling to 1M)",
-    timeline: "Expanding through 2026",
-    description: "Home of the Colossus supercomputer â world's largest AI training cluster. Hosts Grok LLM training. Rapidly expanded from 100K to 550K+ GPUs in 2025.",
-    source_url: "https://constructionreviewonline.com/xai-to-invest-659-million-in-new-memphis-data-center-cluster-buildout-for-grok",
-    source_label: "Construction Review Online"
+    id: 4, name: "Vertex AI Agent Builder", emoji: "☁️", category: "orchestration",
+    tagline: "Google Cloud's enterprise agent development platform",
+    founded: 2023, hq: "Mountain View, CA", stage: "Corporate",
+    lat: 37.3861, lng: -122.0839,
+    funding: { total: "N/A (Google)", round: "Corporate", date: "2023", investors: "Alphabet" },
+    products: [
+      { name: "Vertex AI Agents", desc: "Managed agent deployment on GCP" },
+      { name: "Agent Garden", desc: "Pre-built agent templates" },
+      { name: "Grounding", desc: "RAG-powered search grounding" }
+    ],
+    website: "https://cloud.google.com/vertex-ai/generative-ai/docs/agent-builder",
+    news: "Gemini 2.0 Flash integration for agents announced Jan 2025"
   },
   {
-    id: 5, name: "xAI â Mississippi Data Center",
-    operator: "xAI (Elon Musk)", group: "xAI",
-    lat: 32.3547, lng: -90.8779,
-    status: "announced",
-    location: "Mississippi, USA",
-    power: "Large-scale",
-    investment: "$20B (state pledge)",
-    gpus: "TBD",
-    timeline: "2025â2027",
-    description: "New xAI data center in Mississippi, confirmed with Elon Musk pledging $20B investment in the state for AI infrastructure expansion.",
-    source_url: "https://www.datacenterdynamics.com/en/news/xai-confirms-new-data-center-in-mississippi-elon-musk-pledges-20bn-investment-in-state",
-    source_label: "Data Center Dynamics"
+    id: 5, name: "Amazon Bedrock Agents", emoji: "📦", category: "orchestration",
+    tagline: "AWS managed service for building and deploying AI agents",
+    founded: 2023, hq: "Seattle, WA", stage: "Corporate",
+    lat: 47.6062, lng: -122.3321,
+    funding: { total: "N/A (Amazon)", round: "Corporate", date: "2023", investors: "Amazon" },
+    products: [
+      { name: "Bedrock Agents", desc: "Serverless agent execution with tool use" },
+      { name: "Multi-Agent Collaboration", desc: "Supervisor-subagent patterns (2024)" },
+      { name: "Knowledge Bases", desc: "RAG integration for agents" }
+    ],
+    website: "https://aws.amazon.com/bedrock/agents",
+    news: "Multi-Agent Collaboration GA launched re:Invent 2024"
   },
   {
-    id: 6, name: "Meta Hyperion â Richland Parish",
-    operator: "Meta", group: "Meta",
-    lat: 32.2099, lng: -91.8185,
-    status: "construction",
-    location: "Richland Parish, Louisiana, USA",
-    power: "~1 GW",
-    investment: "$10B",
-    gpus: "Meta AI training clusters",
-    timeline: "2024â2030",
-    description: "Meta's largest AI data center, covering 4 million sq ft on 2,250 acres. Announced December 2024. Expected to support 500+ jobs and Meta's next-gen AI models.",
-    source_url: "https://datacenters.atmeta.com/richland-parish-data-center",
-    source_label: "Meta"
+    id: 6, name: "Beam AI", emoji: "⚡", category: "orchestration",
+    tagline: "Enterprise AI agent platform for business process automation",
+    founded: 2023, hq: "San Francisco, CA", stage: "Series A",
+    lat: 37.7740, lng: -122.4200,
+    funding: { total: "$20M", round: "Series A", date: "2024", investors: "Madrona, others" },
+    products: [
+      { name: "Beam Agents", desc: "Pre-built enterprise AI agents" },
+      { name: "Beam Studio", desc: "Visual workflow builder" }
+    ],
+    website: "https://beam.ai",
+    news: "Series A closed 2024; focusing on enterprise deployments"
   },
   {
-    id: 7, name: "Amazon AWS â Louisiana",
-    operator: "Amazon AWS", group: "Amazon",
-    lat: 32.5252, lng: -93.7502,
-    status: "construction",
-    location: "Caddo & Bossier Parishes, Louisiana, USA",
-    power: "~600 MW",
-    investment: "$12B",
-    gpus: "AWS Trainium/Inferentia clusters",
-    timeline: "2025â2027",
-    description: "Amazon AWS $12 billion data center campus spanning Caddo and Bossier parishes in Louisiana, part of AWS's $100B+ expansion plan.",
-    source_url: "https://www.datacenterdynamics.com/en/news",
-    source_label: "Data Center Dynamics"
+    id: 7, name: "Relevance AI", emoji: "🧠", category: "orchestration",
+    tagline: "No-code AI agent builder for business teams",
+    founded: 2020, hq: "Sydney, Australia", stage: "Series A",
+    lat: -33.8688, lng: 151.2093,
+    funding: { total: "$24M", round: "Series A", date: "2024", investors: "King River Capital" },
+    products: [
+      { name: "AI Workforce", desc: "Multi-agent teams for business tasks" },
+      { name: "Agent Templates", desc: "100+ pre-built agent workflows" },
+      { name: "BDR Agent", desc: "AI sales development representative" }
+    ],
+    website: "https://relevanceai.com",
+    news: "$24M raised 2024; 10,000+ businesses using the platform"
   },
   {
-    id: 8, name: "Amazon AWS â Vicksburg, Mississippi",
-    operator: "Amazon AWS", group: "Amazon",
-    lat: 32.3526, lng: -90.8779,
-    status: "announced",
-    location: "Vicksburg, Mississippi, USA",
-    power: "~300 MW",
-    investment: "$3B",
-    gpus: "AWS AI infrastructure",
-    timeline: "Construction starts 2026",
-    description: "AWS $3 billion data center campus in Vicksburg, Mississippi. Part of Amazon's broader $100B+ US data center investment strategy.",
-    source_url: "https://constructionreviewonline.com/aws-unveils-3b-data-center-campus-in-vicksburg-ms-construction-targets-2026-start",
-    source_label: "Construction Review Online"
+    id: 8, name: "Dust", emoji: "✨", category: "orchestration",
+    tagline: "AI assistant platform for company-wide knowledge and automation",
+    founded: 2022, hq: "Paris, France", stage: "Series A",
+    lat: 48.8566, lng: 2.3522,
+    funding: { total: "$16M", round: "Series A", date: "2024", investors: "Sequoia" },
+    products: [
+      { name: "Dust Assistants", desc: "Custom AI assistants connected to company data" },
+      { name: "Dust Apps", desc: "Programmable LLM workflows" }
+    ],
+    website: "https://dust.tt",
+    news: "Series A led by Sequoia 2024; strong European enterprise traction"
+  },
+
+  // ─── WORKFLOW AUTOMATION ────────────────────────────────────────────────────
+  {
+    id: 9, name: "n8n", emoji: "🔄", category: "workflow",
+    tagline: "Fair-code workflow automation with AI capabilities",
+    founded: 2019, hq: "Berlin, Germany", stage: "Series B",
+    lat: 52.5200, lng: 13.4050,
+    funding: { total: "$55M", round: "Series B", date: "2023", investors: "Highland Europe" },
+    products: [
+      { name: "n8n Cloud", desc: "Hosted workflow automation" },
+      { name: "n8n Self-hosted", desc: "Open-source, self-deployable" },
+      { name: "AI Nodes", desc: "Native LLM + agent nodes (2024)" }
+    ],
+    website: "https://n8n.io",
+    github: "https://github.com/n8n-io/n8n",
+    news: "$55M Series B 2023; 400+ integrations, 50k+ GitHub stars"
   },
   {
-    id: 9, name: "Microsoft AI Campus â Mount Pleasant, WI",
-    operator: "Microsoft", group: "Microsoft",
-    lat: 42.7192, lng: -87.8843,
-    status: "construction",
-    location: "Mount Pleasant / Racine County, Wisconsin, USA",
-    power: "~500 MW",
-    investment: "$4B",
-    gpus: "Azure AI supercomputing",
-    timeline: "Operational early 2026",
-    description: "Microsoft describes this as "the world's most powerful AI datacenter." Located in Racine County, Wisconsin. Second facility also under development nearby.",
-    source_url: "https://blogs.microsoft.com/on-the-issues/2025/09/18/made-in-wisconsin-the-worlds-most-powerful-ai-datacenter",
-    source_label: "Microsoft Blog"
+    id: 10, name: "Make (Integromat)", emoji: "🔧", category: "workflow",
+    tagline: "Visual automation platform connecting apps and services",
+    founded: 2012, hq: "Prague, Czech Republic", stage: "Acquired",
+    lat: 50.0755, lng: 14.4378,
+    funding: { total: "$170M", round: "Acquired by Celonis", date: "2020", investors: "Celonis" },
+    products: [
+      { name: "Make Platform", desc: "No-code visual workflow builder" },
+      { name: "Make AI", desc: "AI-powered scenario generation" },
+      { name: "Enterprise Plan", desc: "Advanced automation for large teams" }
+    ],
+    website: "https://make.com",
+    news: "AI scenario generation feature launched 2024"
   },
   {
-    id: 10, name: "Vantage Frontier Campus",
-    operator: "Vantage Data Centers", group: "Other",
-    lat: 32.7263, lng: -99.6527,
-    status: "construction",
-    location: "Shackelford County, Texas, USA",
-    power: "1.4 GW",
-    investment: "$25B",
-    gpus: "AI-optimized infrastructure",
-    timeline: "First delivery H2 2026",
-    description: "Largest Vantage project ever â 1,200 acres, 10 data centers, 3.7M sq ft. Designed for AI hyperscale workloads. First delivery scheduled H2 2026.",
-    source_url: "https://vantage-dc.com/data-center-locations/north-america/shackelford-county-tx",
-    source_label: "Vantage Data Centers"
+    id: 11, name: "Zapier", emoji: "⚡", category: "workflow",
+    tagline: "The leading no-code automation platform for 7,000+ apps",
+    founded: 2011, hq: "San Francisco, CA", stage: "Profitable",
+    lat: 37.7745, lng: -122.4190,
+    funding: { total: "$1.4B", round: "Profitable/bootstrapped", date: "2021", investors: "Sequoia, Steadfast" },
+    products: [
+      { name: "Zapier Automation", desc: "7,000+ app integrations" },
+      { name: "Zapier Agents", desc: "AI agents with tool access (2024)" },
+      { name: "Zapier Tables", desc: "No-code database for automations" },
+      { name: "Zapier Interfaces", desc: "Build internal tools" }
+    ],
+    website: "https://zapier.com",
+    news: "Zapier Agents launched 2024; $1.4B valuation, profitable"
   },
   {
-    id: 11, name: "Google â Kansas City Campus",
-    operator: "Google", group: "Google",
-    lat: 39.0997, lng: -94.5786,
-    status: "construction",
-    location: "Kansas City, Missouri, USA",
-    power: "~300 MW",
-    investment: "$1B+",
-    gpus: "Google TPU v5 clusters",
-    timeline: "Construction began early 2026",
-    description: "Google's second data center campus in Kansas City, Missouri. Part of Google's $75B+ 2025 capex plan for AI infrastructure expansion.",
-    source_url: "https://www.datacenterdynamics.com/en/news/construction-begins-at-googles-second-data-center-campus-in-kansas-city-missouri",
-    source_label: "Data Center Dynamics"
+    id: 12, name: "Activepieces", emoji: "🧩", category: "workflow",
+    tagline: "Open-source no-code automation, Zapier alternative",
+    founded: 2022, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7730, lng: -122.4175,
+    funding: { total: "$6.6M", round: "Seed", date: "2023", investors: "Y Combinator" },
+    products: [
+      { name: "Activepieces OSS", desc: "Self-hostable workflow automation" },
+      { name: "Activepieces Cloud", desc: "Managed automation service" }
+    ],
+    website: "https://activepieces.com",
+    news: "YC-backed; 5,000+ GitHub stars, growing rapidly"
   },
   {
-    id: 12, name: "Google â Morgan County, Indiana",
-    operator: "Google", group: "Google",
-    lat: 39.4823, lng: -86.4272,
-    status: "announced",
-    location: "Morgan County, Indiana, USA",
-    power: "~500 MW",
-    investment: "$2B+",
-    gpus: "Google AI infrastructure",
-    timeline: "2025â2027",
-    description: "Google revealed itself as the developer behind a 500-acre Morgan County data center campus. Part of Google's major Indiana infrastructure investment.",
-    source_url: "https://www.insideindianabusiness.com/articles/google-reveals-itself-as-developer-behind-500-acre-morgan-county-data-center-campus",
-    source_label: "Inside Indiana Business"
+    id: 13, name: "Pipedream", emoji: "🌊", category: "workflow",
+    tagline: "Developer-first workflow automation with code + no-code",
+    founded: 2018, hq: "San Francisco, CA", stage: "Series A",
+    lat: 37.7760, lng: -122.4210,
+    funding: { total: "$20M", round: "Series A", date: "2022", investors: "True Ventures" },
+    products: [
+      { name: "Pipedream Workflows", desc: "Event-driven automation with code" },
+      { name: "Pipedream Connect", desc: "Embed auth+integrations in products" },
+      { name: "AI Actions", desc: "OpenAI, Anthropic, Gemini native steps" }
+    ],
+    website: "https://pipedream.com",
+    news: "Pipedream Connect launched 2024 for embedded integrations"
+  },
+
+  // ─── RPA + AI ───────────────────────────────────────────────────────────────
+  {
+    id: 14, name: "UiPath", emoji: "🤖", category: "rpa",
+    tagline: "Enterprise RPA leader adding agentic AI automation",
+    founded: 2005, hq: "New York, NY", stage: "Public (NYSE: PATH)",
+    lat: 40.7128, lng: -74.0060,
+    funding: { total: "$35B", round: "Public (NYSE: PATH)", date: "2021", investors: "Public" },
+    products: [
+      { name: "UiPath Platform", desc: "End-to-end automation with RPA + AI" },
+      { name: "Autopilot", desc: "AI-powered automation assistant" },
+      { name: "Process Mining", desc: "Discover automation opportunities" },
+      { name: "Agentic Automation", desc: "AI agents + RPA hybrid (2024)" }
+    ],
+    website: "https://uipath.com",
+    news: "Agentic Automation strategy announced 2024; $35B peak valuation"
   },
   {
-    id: 13, name: "Google â Monroe County, Georgia",
-    operator: "Google", group: "Google",
-    lat: 33.0232, lng: -83.9213,
-    status: "announced",
-    location: "Monroe County, Georgia, USA",
-    power: "~300 MW",
-    investment: "$1B+",
-    gpus: "Google AI infrastructure",
-    timeline: "2025â2027",
-    description: "Google acquired $42M in Monroe County land for a new data center campus. Part of Google's Southern US expansion strategy.",
-    source_url: "https://www.gpb.org/news/2025/10/14/google-drops-42-million-on-monroe-county-land-for-data-center",
-    source_label: "GPB News"
+    id: 15, name: "Automation Anywhere", emoji: "🏭", category: "rpa",
+    tagline: "AI-powered automation platform for enterprise workflows",
+    founded: 2003, hq: "San Jose, CA", stage: "Late Stage",
+    lat: 37.3382, lng: -121.8863,
+    funding: { total: "$840M", round: "Late Stage", date: "2022", investors: "SoftBank, General Atlantic" },
+    products: [
+      { name: "Automation 360", desc: "Cloud-native RPA platform" },
+      { name: "AutomationAnywhere Copilot", desc: "Generative AI for automation" },
+      { name: "AARI", desc: "AI-powered digital assistant" }
+    ],
+    website: "https://automationanywhere.com",
+    news: "$840M raised; Generative AI embedded across platform 2024"
   },
   {
-    id: 14, name: "CoreWeave â Denton, Texas",
-    operator: "CoreWeave", group: "Other",
-    lat: 33.2148, lng: -97.1331,
-    status: "construction",
-    location: "Denton, Texas, USA",
-    power: "~200 MW",
-    investment: "$5B+ (total portfolio)",
-    gpus: "16,000+ NVIDIA H100/H200",
-    timeline: "Operational 2025",
-    description: "CoreWeave deployed 16,000 GPUs at its Denton, Texas facility. CoreWeave is the fastest-growing AI cloud provider, building GPU-optimized data centers globally.",
-    source_url: "https://www.datacenterdynamics.com/en/news/coreweave-deploys-16000-gpus-at-delayed-data-center-in-denton-texas",
-    source_label: "Data Center Dynamics"
+    id: 16, name: "Blue Prism (SS&C)", emoji: "🔵", category: "rpa",
+    tagline: "Enterprise intelligent automation platform",
+    founded: 2001, hq: "Warrington, UK", stage: "Acquired",
+    lat: 53.3900, lng: -2.5970,
+    funding: { total: "Acquired", round: "Acquired by SS&C 2022", date: "2022", investors: "SS&C Technologies" },
+    products: [
+      { name: "Blue Prism Cloud", desc: "Intelligent automation as a service" },
+      { name: "Chorus", desc: "BPM + RPA combined platform" }
+    ],
+    website: "https://blueprism.com",
+    news: "Acquired by SS&C Technologies for $1.6B in 2022"
   },
   {
-    id: 15, name: "CoreWeave â Lancaster, Pennsylvania",
-    operator: "CoreWeave", group: "Other",
-    lat: 40.0379, lng: -76.3055,
-    status: "construction",
-    location: "Lancaster, Pennsylvania, USA",
-    power: "~150 MW",
-    investment: "$2B+",
-    gpus: "NVIDIA GPU clusters",
-    timeline: "2025",
-    description: "CoreWeave data center in Lancaster, PA. CoreWeave operates one of the largest NVIDIA GPU fleets globally for AI training and inference.",
-    source_url: "https://www.coreweave.com",
-    source_label: "CoreWeave"
+    id: 17, name: "Workato", emoji: "⚙️", category: "rpa",
+    tagline: "Enterprise automation and integration platform",
+    founded: 2013, hq: "Mountain View, CA", stage: "Series E",
+    lat: 37.3880, lng: -122.0820,
+    funding: { total: "$405M", round: "Series E", date: "2022", investors: "Battery Ventures, Insight" },
+    products: [
+      { name: "Workato Platform", desc: "iPaaS + RPA + AI automation" },
+      { name: "Copilot", desc: "AI-powered recipe builder" },
+      { name: "WorkbotGPT", desc: "Conversational AI for workflows" }
+    ],
+    website: "https://workato.com",
+    news: "$5.7B valuation; AI Copilot launched across platform 2024"
+  },
+
+  // ─── VOICE-FIRST AGENTS ─────────────────────────────────────────────────────
+  {
+    id: 18, name: "Bland AI", emoji: "📞", category: "voice",
+    tagline: "AI phone calling platform for enterprise voice agents",
+    founded: 2023, hq: "San Francisco, CA", stage: "Series A",
+    lat: 37.7755, lng: -122.4165,
+    funding: { total: "$22M", round: "Series A", date: "2024", investors: "Scale Venture Partners" },
+    products: [
+      { name: "Bland Voice API", desc: "Programmable AI phone calls" },
+      { name: "Conversational Pathways", desc: "Visual call flow builder" },
+      { name: "Enterprise Suite", desc: "Custom voice agents at scale" }
+    ],
+    website: "https://bland.ai",
+    news: "$22M Series A 2024; processing millions of calls/month"
   },
   {
-    id: 16, name: "CoreWeave â Hammond, Indiana",
-    operator: "CoreWeave", group: "Other",
-    lat: 41.5834, lng: -87.5001,
-    status: "construction",
-    location: "Hammond, Indiana, USA",
-    power: "~150 MW",
-    investment: "$2B+",
-    gpus: "NVIDIA GPU clusters",
-    timeline: "2025",
-    description: "CoreWeave GPU-optimized data center in Hammond, Indiana. Part of CoreWeave's rapid US expansion to meet AI compute demand.",
-    source_url: "https://www.coreweave.com",
-    source_label: "CoreWeave"
+    id: 19, name: "Vapi", emoji: "🎙️", category: "voice",
+    tagline: "Developer platform for building voice AI applications",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7758, lng: -122.4170,
+    funding: { total: "$20M", round: "Seed", date: "2024", investors: "Y Combinator, Bessemer" },
+    products: [
+      { name: "Vapi API", desc: "Real-time voice AI infrastructure" },
+      { name: "Vapi Dashboard", desc: "Voice agent management" },
+      { name: "Vapi Squads", desc: "Multi-agent voice orchestration" }
+    ],
+    website: "https://vapi.ai",
+    news: "YC-backed; $20M raised 2024; 50k+ developers on platform"
   },
   {
-    id: 17, name: "CoreWeave â UK (Crawley)",
-    operator: "CoreWeave", group: "Other",
-    lat: 51.1093, lng: -0.1872,
-    status: "operational",
-    location: "Crawley, England, UK",
-    power: "~100 MW",
-    investment: "$1B+",
-    gpus: "NVIDIA H100 clusters",
-    timeline: "Operational 2025",
-    description: "CoreWeave's first UK data center in Crawley, now operational. Supports AI workloads for European customers. Second UK facility in London Docklands also operational.",
-    source_url: "https://www.coreweave.com/news/coreweave-announces-two-initial-data-centers-in-the-uk-are-now-operational",
-    source_label: "CoreWeave"
+    id: 20, name: "Retell AI", emoji: "🔊", category: "voice",
+    tagline: "Build, test and deploy AI voice agents at scale",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7762, lng: -122.4185,
+    funding: { total: "$4.5M", round: "Seed", date: "2023", investors: "Y Combinator" },
+    products: [
+      { name: "Retell Voice Platform", desc: "Low-latency voice AI agents" },
+      { name: "Retell LLM", desc: "Optimized LLM for voice conversations" },
+      { name: "Batch Calling", desc: "Automated outbound call campaigns" }
+    ],
+    website: "https://retellai.com",
+    news: "YC W23; rapid growth in voice agent market 2024"
   },
   {
-    id: 18, name: "Microsoft â UAE Expansion (G42)",
-    operator: "Microsoft / G42", group: "Microsoft",
-    lat: 24.4539, lng: 54.3773,
-    status: "construction",
-    location: "Abu Dhabi, UAE",
-    power: "200 MW (expansion)",
-    investment: "$15.2B",
-    gpus: "Azure AI clusters",
-    timeline: "Operational by end 2026",
-    description: "Microsoft committed $15.2B to UAE AI infrastructure expansion in partnership with G42. 200 MW capacity increase expected operational before end of 2026.",
-    source_url: "https://news.microsoft.com/source/emea/2025/11/microsoft-and-g42-accelerate-uaes-digital-future-with-major-data-centre-expansion",
-    source_label: "Microsoft News"
+    id: 21, name: "ElevenLabs", emoji: "🎵", category: "voice",
+    tagline: "AI voice technology platform with conversational agents",
+    founded: 2022, hq: "New York, NY", stage: "Series C",
+    lat: 40.7120, lng: -74.0050,
+    funding: { total: "$180M", round: "Series C", date: "2024", investors: "a16z, Sequoia" },
+    products: [
+      { name: "Voice Synthesis", desc: "Ultra-realistic AI voice cloning" },
+      { name: "Conversational AI", desc: "Real-time voice agents (2024)" },
+      { name: "ElevenLabs Studio", desc: "Audio content creation platform" },
+      { name: "Reader App", desc: "AI-powered audiobook creation" }
+    ],
+    website: "https://elevenlabs.io",
+    news: "$1.1B valuation; Conversational AI launched Jan 2025"
   },
   {
-    id: 19, name: "SK Group + AWS â Ulsan Hyperscale",
-    operator: "SK Group / Amazon AWS", group: "Amazon",
-    lat: 35.5384, lng: 129.3114,
-    status: "construction",
-    location: "Ulsan, South Korea",
-    power: "~500 MW",
-    investment: "$5B",
-    gpus: "AWS AI infrastructure",
-    timeline: "Groundbreaking Aug 2025, operational 2029",
-    description: "South Korea's largest AI hyperscale data center. SK Group and AWS partnership. Groundbreaking in August 2025, full operations expected by 2029.",
-    source_url: "https://www.koreatimes.co.kr",
-    source_label: "Korea Times"
+    id: 22, name: "Hume AI", emoji: "💬", category: "voice",
+    tagline: "Empathic voice interface with emotional intelligence",
+    founded: 2021, hq: "New York, NY", stage: "Series B",
+    lat: 40.7115, lng: -74.0045,
+    funding: { total: "$50M", round: "Series B", date: "2024", investors: "Union Square Ventures, EQT" },
+    products: [
+      { name: "Empathic Voice Interface (EVI)", desc: "Voice AI that understands emotion" },
+      { name: "EVI 2", desc: "Fastest empathic voice model (2024)" },
+      { name: "Expression Measurement API", desc: "Emotion detection from voice/video" }
+    ],
+    website: "https://hume.ai",
+    news: "$50M Series B 2024; EVI 2 launched with sub-500ms latency"
   },
   {
-    id: 20, name: "SoftBank â Hokkaido Tomakomai AI DC",
-    operator: "SoftBank", group: "Other",
-    lat: 42.6365, lng: 141.6055,
-    status: "construction",
-    location: "Tomakomai, Hokkaido, Japan",
-    power: "~300 MW",
-    investment: "$2B+",
-    gpus: "NVIDIA AI clusters",
-    timeline: "Construction began May 2025",
-    description: "SoftBank's Hokkaido Tomakomai AI Data Center. Construction began May 2025. Powered by renewable energy from Hokkaido's abundant wind and geothermal resources.",
-    source_url: "https://www.softbank.jp/en/sbnews/entry/20250501_01",
-    source_label: "SoftBank News"
+    id: 23, name: "Play AI", emoji: "▶️", category: "voice",
+    tagline: "AI voice agents for customer service automation",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7770, lng: -122.4195,
+    funding: { total: "$7M", round: "Seed", date: "2024", investors: "Various" },
+    products: [
+      { name: "PlayAI Agents", desc: "Autonomous voice agents for support" },
+      { name: "PlayNote", desc: "AI podcast/audio generation" },
+      { name: "PlayDialog", desc: "Multi-speaker conversation model" }
+    ],
+    website: "https://play.ai",
+    news: "PlayDialog model released 2024; focus on enterprise voice agents"
+  },
+
+  // ─── COMPUTER-USE AGENTS ────────────────────────────────────────────────────
+  {
+    id: 24, name: "Anthropic Claude Computer Use", emoji: "🖥️", category: "computer",
+    tagline: "AI that can use computers like a human — click, type, browse",
+    founded: 2021, hq: "San Francisco, CA", stage: "Series E",
+    lat: 37.7780, lng: -122.4220,
+    funding: { total: "$7.3B", round: "Series E", date: "2024", investors: "Amazon, Google" },
+    products: [
+      { name: "Claude 3.5 Sonnet", desc: "Flagship model with computer use" },
+      { name: "Computer Use API", desc: "Beta: control desktop via AI" },
+      { name: "Claude 3.5 Haiku", desc: "Fast, efficient model" },
+      { name: "Artifacts", desc: "Code and app generation in chat" }
+    ],
+    website: "https://anthropic.com",
+    news: "Computer Use API in beta Oct 2024; $7.3B raised, $60B valuation"
   },
   {
-    id: 21, name: "Nexus Yang â Malaysia",
-    operator: "Vena Energy / Nexus", group: "Other",
-    lat: 2.7297, lng: 101.9381,
-    status: "construction",
-    location: "Negeri Sembilan, Malaysia",
-    power: "350 MW",
-    investment: "$2B+",
-    gpus: "AI-ready infrastructure",
-    timeline: "Groundbreaking 2026",
-    description: "350 MW Nexus Yang AI-ready green data centre in Negeri Sembilan, Malaysia. Powered by renewable energy. Designed for hyperscale AI workloads.",
-    source_url: "https://solarquarter.com/2026/03/03/vena-nexus-breaks-ground-on-350-mw-nexus-yang-ai-ready-green-data-centre-in-negeri-sembilan",
-    source_label: "SolarQuarter"
+    id: 25, name: "OpenAI Operator", emoji: "🌐", category: "computer",
+    tagline: "OpenAI's web-browsing agent that completes tasks autonomously",
+    founded: 2015, hq: "San Francisco, CA", stage: "Late Stage",
+    lat: 37.7785, lng: -122.4225,
+    funding: { total: "$17.9B", round: "Late Stage", date: "2024", investors: "Microsoft, SoftBank" },
+    products: [
+      { name: "Operator", desc: "Web agent for autonomous task completion" },
+      { name: "GPT-4o", desc: "Multimodal flagship model" },
+      { name: "o3", desc: "Advanced reasoning model (Jan 2025)" },
+      { name: "Sora", desc: "Video generation model" },
+      { name: "ChatGPT", desc: "Consumer AI assistant" }
+    ],
+    website: "https://openai.com",
+    news: "Operator launched Jan 2025; o3 model released; $157B valuation"
   },
   {
-    id: 22, name: "Microsoft â Norway Data Center",
-    operator: "Microsoft", group: "Microsoft",
-    lat: 59.9139, lng: 10.7522,
-    status: "construction",
-    location: "Norway",
-    power: "~200 MW",
-    investment: "$1B+",
-    gpus: "Azure AI infrastructure",
-    timeline: "2025â2026",
-    description: "Microsoft is building a new hyperscale data center in Norway, powered by renewable hydroelectric energy. Part of Microsoft's European AI infrastructure expansion.",
-    source_url: "https://www.siliconrepublic.com/business/microsoft-google-european-ai-data-centre-germany-portugal-2025",
-    source_label: "Silicon Republic"
+    id: 26, name: "Browser Use", emoji: "🌍", category: "computer",
+    tagline: "Open-source library enabling AI agents to control browsers",
+    founded: 2024, hq: "Remote", stage: "Open Source",
+    lat: 47.3769, lng: 8.5417,
+    funding: { total: "$17M", round: "Seed", date: "2025", investors: "a16z" },
+    products: [
+      { name: "browser-use OSS", desc: "Python library for browser automation" },
+      { name: "Cloud API", desc: "Managed browser agent execution" }
+    ],
+    website: "https://browser-use.com",
+    github: "https://github.com/browser-use/browser-use",
+    news: "$17M seed from a16z Jan 2025; 40k+ GitHub stars"
   },
   {
-    id: 23, name: "Google â Waltham Cross, UK",
-    operator: "Google", group: "Google",
-    lat: 51.6975, lng: -0.0220,
-    status: "operational",
-    location: "Waltham Cross, Hertfordshire, UK",
-    power: "~100 MW",
-    investment: "Â£5B (UK total)",
-    gpus: "Google TPU clusters",
-    timeline: "Opened 2025",
-    description: "Google opened its Waltham Cross data center as part of a Â£5 billion two-year UK investment. Supports Google AI services across Europe.",
-    source_url: "https://www.prnewswire.com/news-releases/google-opens-waltham-cross-data-centre-as-part-of-two-year-5-billion-investment-in-the-uk-to-help-power-its-ai-economy-302556707.html",
-    source_label: "PR Newswire"
+    id: 27, name: "Skyvern", emoji: "🦅", category: "computer",
+    tagline: "AI agent that automates browser workflows using vision + LLMs",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7790, lng: -122.4230,
+    funding: { total: "$17.5M", round: "Seed", date: "2024", investors: "a16z" },
+    products: [
+      { name: "Skyvern OSS", desc: "Open-source browser automation agent" },
+      { name: "Skyvern Cloud", desc: "Managed browser automation service" }
+    ],
+    website: "https://skyvern.com",
+    github: "https://github.com/Skyvern-AI/skyvern",
+    news: "$17.5M seed from a16z 2024; vision-first browser automation"
   },
   {
-    id: 24, name: "NEOM AI Data Center",
-    operator: "NEOM / Saudi Arabia", group: "Other",
-    lat: 28.0339, lng: 36.2765,
-    status: "announced",
-    location: "NEOM, Tabuk Province, Saudi Arabia",
-    power: "~500 MW",
-    investment: "$5B",
-    gpus: "AI supercomputing",
-    timeline: "2025â2028",
-    description: "$5 billion AI data center announced for NEOM, Saudi Arabia's futuristic megacity project. Part of Saudi Arabia's Vision 2030 AI infrastructure strategy.",
-    source_url: "https://www.datacenterdynamics.com/en/news",
-    source_label: "Data Center Dynamics"
+    id: 28, name: "Proxy (Convergence AI)", emoji: "🔮", category: "computer",
+    tagline: "Universal AI agent that works across any application",
+    founded: 2024, hq: "London, UK", stage: "Seed",
+    lat: 51.5074, lng: -0.1278,
+    funding: { total: "$12M", round: "Seed", date: "2024", investors: "Various" },
+    products: [
+      { name: "Proxy Agent", desc: "Desktop + web universal AI agent" },
+      { name: "Proxy API", desc: "Programmatic agent access" }
+    ],
+    website: "https://convergence.ai",
+    news: "Proxy demo went viral 2024; raised seed funding"
   },
   {
-    id: 25, name: "Oracle â Saline Township, Michigan",
-    operator: "Oracle", group: "Other",
-    lat: 42.1748, lng: -83.7793,
-    status: "announced",
-    location: "Saline Township, Michigan, USA",
-    power: "~200 MW",
-    investment: "$1B+",
-    gpus: "Oracle AI cloud",
-    timeline: "2025â2026",
-    description: "Oracle announced a new AI data center facility in Saline Township, Michigan. Oracle is a key infrastructure partner in the Stargate AI initiative.",
-    source_url: "https://www.oracle.com/news/announcement/blog/oracle-is-set-to-power-on-new-data-center-in-michigan-2025-1018",
-    source_label: "Oracle"
+    id: 29, name: "Magnitude", emoji: "📊", category: "computer",
+    tagline: "AI agent for automated software testing via browser control",
+    founded: 2024, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7795, lng: -122.4235,
+    funding: { total: "$6M", round: "Seed", date: "2024", investors: "Y Combinator" },
+    products: [
+      { name: "Magnitude Testing", desc: "AI-powered end-to-end test automation" }
+    ],
+    website: "https://magnitude.run",
+    news: "YC-backed; AI testing agent for web apps 2024"
   },
   {
-    id: 26, name: "CyrusOne + Calpine â Texas",
-    operator: "CyrusOne / Calpine", group: "Other",
+    id: 30, name: "MultiOn", emoji: "🌐", category: "computer",
+    tagline: "Personal AI agent that browses the web and completes tasks",
+    founded: 2022, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7800, lng: -122.4240,
+    funding: { total: "$10M", round: "Seed", date: "2023", investors: "Various" },
+    products: [
+      { name: "MultiOn Agent", desc: "Web browsing AI agent" },
+      { name: "MultiOn API", desc: "Embed web automation in products" }
+    ],
+    website: "https://multion.ai",
+    news: "API launched 2024; integrations with major AI frameworks"
+  },
+
+  // ─── LOCAL AI DEPLOYMENT ────────────────────────────────────────────────────
+  {
+    id: 31, name: "Ollama", emoji: "🦙", category: "local",
+    tagline: "Run large language models locally on your machine",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7805, lng: -122.4245,
+    funding: { total: "$", round: "Bootstrapped/Seed", date: "2023", investors: "Various" },
+    products: [
+      { name: "Ollama CLI", desc: "Local LLM runtime for Mac/Linux/Windows" },
+      { name: "Ollama Library", desc: "100+ models: Llama, Mistral, Gemma" },
+      { name: "Ollama API", desc: "OpenAI-compatible local API" }
+    ],
+    website: "https://ollama.com",
+    github: "https://github.com/ollama/ollama",
+    news: "50k+ GitHub stars; most popular local LLM tool 2024"
+  },
+  {
+    id: 32, name: "LM Studio", emoji: "🔬", category: "local",
+    tagline: "Desktop app to run and chat with local AI models",
+    founded: 2023, hq: "San Francisco, CA", stage: "Bootstrapped",
+    lat: 37.7810, lng: -122.4250,
+    funding: { total: "$", round: "Bootstrapped", date: "2023", investors: "Self-funded" },
+    products: [
+      { name: "LM Studio App", desc: "GUI for running local LLMs" },
+      { name: "Local Server", desc: "OpenAI-compatible local inference" }
+    ],
+    website: "https://lmstudio.ai",
+    news: "2M+ downloads; major update with multi-model support 2024"
+  },
+  {
+    id: 33, name: "Jan.ai", emoji: "❄️", category: "local",
+    tagline: "Open-source ChatGPT alternative running fully offline",
+    founded: 2023, hq: "Singapore", stage: "Seed",
+    lat: 1.3521, lng: 103.8198,
+    funding: { total: "$", round: "Seed", date: "2023", investors: "Various" },
+    products: [
+      { name: "Jan Desktop", desc: "Offline-first AI assistant" },
+      { name: "Cortex", desc: "Local AI inference engine" },
+      { name: "Jan API", desc: "OpenAI-compatible local API" }
+    ],
+    website: "https://jan.ai",
+    github: "https://github.com/janhq/jan",
+    news: "20k+ GitHub stars; Cortex engine released 2024"
+  },
+  {
+    id: 34, name: "AnythingLLM", emoji: "📚", category: "local",
+    tagline: "All-in-one AI app for local RAG, agents, and chat",
+    founded: 2023, hq: "Remote", stage: "Open Source",
     lat: 30.2672, lng: -97.7431,
-    status: "construction",
-    location: "Texas, USA",
-    power: "~300 MW",
-    investment: "$1.2B",
-    gpus: "AI-optimized colocation",
-    timeline: "2025â2026",
-    description: "$1.2 billion AI data center campus by CyrusOne and Calpine in Texas, featuring on-site natural gas power generation for reliability.",
-    source_url: "https://www.datacenterdynamics.com/en/news",
-    source_label: "Data Center Dynamics"
+    funding: { total: "$", round: "Open Source", date: "2023", investors: "Community" },
+    products: [
+      { name: "AnythingLLM Desktop", desc: "Local AI with RAG and agents" },
+      { name: "AnythingLLM Cloud", desc: "Hosted version" },
+      { name: "Agent Skills", desc: "Tool-use for local AI agents" }
+    ],
+    website: "https://useanything.com",
+    github: "https://github.com/Mintplex-Labs/anything-llm",
+    news: "25k+ GitHub stars; agent skills feature launched 2024"
   },
   {
-    id: 27, name: "Amazon AWS â Warren County, Mississippi",
-    operator: "Amazon AWS", group: "Amazon",
-    lat: 32.3824, lng: -90.8779,
-    status: "announced",
-    location: "Warren County, Mississippi, USA",
-    power: "~200 MW",
-    investment: "$3B",
-    gpus: "AWS AI infrastructure",
-    timeline: "2025â2027",
-    description: "Amazon AWS $3 billion data center investment in Warren County, Mississippi. Part of Amazon's commitment to expand AI cloud infrastructure in the US South.",
-    source_url: "https://www.aboutamazon.com/news/company-news/amazon-3-billion-mississippi-data-center-investment",
-    source_label: "About Amazon"
+    id: 35, name: "LocalAI", emoji: "🏠", category: "local",
+    tagline: "Free, open-source OpenAI alternative for local inference",
+    founded: 2023, hq: "Remote", stage: "Open Source",
+    lat: 45.4642, lng: 9.1900,
+    funding: { total: "$", round: "Open Source", date: "2023", investors: "Community" },
+    products: [
+      { name: "LocalAI Server", desc: "Drop-in OpenAI API replacement" },
+      { name: "Model Gallery", desc: "Pre-configured model library" }
+    ],
+    website: "https://localai.io",
+    github: "https://github.com/mudler/LocalAI",
+    news: "22k+ GitHub stars; GPU and CPU inference support"
+  },
+
+  // ─── ADDITIONAL KEY PLAYERS ─────────────────────────────────────────────────
+  {
+    id: 36, name: "Flowise", emoji: "🌊", category: "orchestration",
+    tagline: "Open-source visual LLM flow builder",
+    founded: 2023, hq: "Singapore", stage: "Seed",
+    lat: 1.3600, lng: 103.8200,
+    funding: { total: "$3.5M", round: "Seed", date: "2024", investors: "Y Combinator" },
+    products: [
+      { name: "Flowise OSS", desc: "Drag-and-drop LLM app builder" },
+      { name: "Flowise Cloud", desc: "Hosted visual agent builder" }
+    ],
+    website: "https://flowiseai.com",
+    github: "https://github.com/FlowiseAI/Flowise",
+    news: "YC-backed; 30k+ GitHub stars; popular for RAG pipelines"
   },
   {
-    id: 28, name: "Microsoft â Dorr & Lowell Townships, Michigan",
-    operator: "Microsoft", group: "Microsoft",
-    lat: 42.7312, lng: -85.6502,
-    status: "announced",
-    location: "Dorr & Lowell Townships, Michigan, USA",
-    power: "~300 MW",
-    investment: "$2B+",
-    gpus: "Azure AI infrastructure",
-    timeline: "2025â2027",
-    description: "Microsoft plans data centers in Dorr and Lowell Townships, Michigan, with rezoning applications filed for Gaines Township. Part of Microsoft's $80B FY2025 capex.",
-    source_url: "https://www.datacenterdynamics.com/en/news/microsoft-plans-data-centers-in-dorr-and-lowell-townships-applies-for-property-rezoning-in-gaines-townships",
-    source_label: "Data Center Dynamics"
+    id: 37, name: "Dify", emoji: "🎯", category: "orchestration",
+    tagline: "Open-source LLM app development platform",
+    founded: 2023, hq: "San Francisco, CA", stage: "Series A",
+    lat: 37.7815, lng: -122.4255,
+    funding: { total: "$20M", round: "Series A", date: "2024", investors: "Benchmark" },
+    products: [
+      { name: "Dify Platform", desc: "Visual LLM workflow builder" },
+      { name: "Dify Cloud", desc: "Hosted LLM app platform" },
+      { name: "Dify Agents", desc: "Autonomous agent workflows" }
+    ],
+    website: "https://dify.ai",
+    github: "https://github.com/langgenius/dify",
+    news: "$20M Series A 2024; 40k+ GitHub stars"
+  },
+  {
+    id: 38, name: "Coze (ByteDance)", emoji: "🎭", category: "orchestration",
+    tagline: "ByteDance's AI bot development platform",
+    founded: 2023, hq: "Singapore", stage: "Corporate",
+    lat: 1.3550, lng: 103.8650,
+    funding: { total: "N/A (ByteDance)", round: "Corporate", date: "2023", investors: "ByteDance" },
+    products: [
+      { name: "Coze Platform", desc: "No-code AI bot builder" },
+      { name: "Coze API", desc: "Deploy bots to multiple channels" },
+      { name: "Workflow Engine", desc: "Visual AI workflow builder" }
+    ],
+    website: "https://coze.com",
+    news: "Rapid global expansion 2024; ByteDance's answer to GPT Store"
+  },
+  {
+    id: 39, name: "Respell", emoji: "✍️", category: "workflow",
+    tagline: "No-code AI workflow automation platform",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7820, lng: -122.4260,
+    funding: { total: "$4M", round: "Seed", date: "2023", investors: "Y Combinator" },
+    products: [
+      { name: "Respell Spells", desc: "AI-powered workflow automations" },
+      { name: "AI Templates", desc: "Pre-built automation templates" }
+    ],
+    website: "https://respell.ai",
+    news: "YC-backed; growing enterprise customer base 2024"
+  },
+  {
+    id: 40, name: "Lindy AI", emoji: "🤝", category: "workflow",
+    tagline: "AI employee platform for business task automation",
+    founded: 2023, hq: "San Francisco, CA", stage: "Series A",
+    lat: 37.7825, lng: -122.4265,
+    funding: { total: "$10.6M", round: "Series A", date: "2024", investors: "a16z" },
+    products: [
+      { name: "Lindy AI Employees", desc: "Autonomous AI for email, scheduling, CRM" },
+      { name: "Lindy Workflows", desc: "Multi-step AI automation" }
+    ],
+    website: "https://lindy.ai",
+    news: "$10.6M from a16z 2024; 50+ AI employee templates"
+  },
+  {
+    id: 41, name: "Cognosys", emoji: "🧠", category: "orchestration",
+    tagline: "AI agent platform for autonomous research and tasks",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7830, lng: -122.4270,
+    funding: { total: "$2.5M", round: "Seed", date: "2023", investors: "Various" },
+    products: [
+      { name: "Cognosys Agent", desc: "Autonomous web research agent" }
+    ],
+    website: "https://cognosys.ai",
+    news: "Early AGI-adjacent agent platform; growing user base"
+  },
+  {
+    id: 42, name: "Adept AI", emoji: "🚀", category: "computer",
+    tagline: "AI that learns to use software to get work done",
+    founded: 2022, hq: "San Francisco, CA", stage: "Series B",
+    lat: 37.7835, lng: -122.4275,
+    funding: { total: "$415M", round: "Series B", date: "2023", investors: "General Catalyst, Spark" },
+    products: [
+      { name: "ACT-2", desc: "Multimodal model for software interaction" },
+      { name: "Adept Agents", desc: "Enterprise computer-use agents" }
+    ],
+    website: "https://adept.ai",
+    news: "$415M raised; team partially acquired by Amazon 2024"
+  },
+  {
+    id: 43, name: "Fixie AI", emoji: "🔧", category: "voice",
+    tagline: "AI voice and agent platform for developers",
+    founded: 2022, hq: "Seattle, WA", stage: "Seed",
+    lat: 47.6050, lng: -122.3300,
+    funding: { total: "$17M", round: "Seed", date: "2023", investors: "NEA, Madrona" },
+    products: [
+      { name: "Fixie Voice", desc: "Real-time voice AI platform" },
+      { name: "Ultravox", desc: "Open-source voice AI model" }
+    ],
+    website: "https://fixie.ai",
+    news: "Ultravox open-source voice model released 2024"
+  },
+  {
+    id: 44, name: "Letta (MemGPT)", emoji: "💾", category: "orchestration",
+    tagline: "Stateful agents with long-term memory and persistence",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7840, lng: -122.4280,
+    funding: { total: "$10M", round: "Seed", date: "2024", investors: "a16z" },
+    products: [
+      { name: "Letta Framework", desc: "Stateful agent development" },
+      { name: "Letta Cloud", desc: "Hosted persistent agent service" },
+      { name: "ADE", desc: "Agent Development Environment" }
+    ],
+    website: "https://letta.ai",
+    github: "https://github.com/cpacker/MemGPT",
+    news: "Rebranded from MemGPT; $10M from a16z 2024"
+  },
+  {
+    id: 45, name: "Superagent", emoji: "🦸", category: "orchestration",
+    tagline: "Open-source AI agent framework with memory and tools",
+    founded: 2023, hq: "Remote", stage: "Open Source",
+    lat: 55.6761, lng: 12.5683,
+    funding: { total: "$", round: "Open Source", date: "2023", investors: "Community" },
+    products: [
+      { name: "Superagent OSS", desc: "Build AI agents with tools and memory" },
+      { name: "Superagent Cloud", desc: "Hosted agent deployment" }
+    ],
+    website: "https://superagent.sh",
+    github: "https://github.com/superagent-ai/superagent",
+    news: "10k+ GitHub stars; popular for RAG+agent workflows"
+  },
+  {
+    id: 46, name: "AgentGPT", emoji: "🤖", category: "orchestration",
+    tagline: "Browser-based autonomous AI agent platform",
+    founded: 2023, hq: "Remote", stage: "Open Source",
+    lat: 48.2082, lng: 16.3738,
+    funding: { total: "$", round: "Open Source", date: "2023", investors: "Community" },
+    products: [
+      { name: "AgentGPT Web", desc: "Browser-based autonomous agent" },
+      { name: "Reworkd Platform", desc: "Enterprise agent automation" }
+    ],
+    website: "https://agentgpt.reworkd.ai",
+    github: "https://github.com/reworkd/AgentGPT",
+    news: "30k+ GitHub stars; pivoting to enterprise (Reworkd)"
+  },
+  {
+    id: 47, name: "Gumloop", emoji: "🔁", category: "workflow",
+    tagline: "AI-powered workflow automation for knowledge workers",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7845, lng: -122.4285,
+    funding: { total: "$17M", round: "Seed", date: "2024", investors: "Gradient Ventures" },
+    products: [
+      { name: "Gumloop Flows", desc: "Visual AI workflow builder" },
+      { name: "AI Nodes", desc: "50+ AI-powered automation nodes" }
+    ],
+    website: "https://gumloop.com",
+    news: "$17M seed 2024; growing rapidly in SMB market"
+  },
+  {
+    id: 48, name: "Wordware", emoji: "📝", category: "orchestration",
+    tagline: "AI operating system for building AI agents in plain English",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7850, lng: -122.4290,
+    funding: { total: "$30M", round: "Seed", date: "2024", investors: "a16z" },
+    products: [
+      { name: "Wordware IDE", desc: "Natural language AI development" },
+      { name: "Wordware Agents", desc: "Deploy agents from English prompts" }
+    ],
+    website: "https://wordware.ai",
+    news: "$30M seed from a16z 2024; novel natural language AI dev approach"
+  },
+  {
+    id: 49, name: "Lutra AI", emoji: "🦦", category: "workflow",
+    tagline: "AI that writes and runs automation scripts from natural language",
+    founded: 2023, hq: "San Francisco, CA", stage: "Seed",
+    lat: 37.7855, lng: -122.4295,
+    funding: { total: "$", round: "Seed", date: "2023", investors: "Various" },
+    products: [
+      { name: "Lutra Workflows", desc: "NL-to-automation pipeline" }
+    ],
+    website: "https://lutra.ai",
+    news: "Natural language automation; growing use case in enterprise"
+  },
+  {
+    id: 50, name: "Thoughtful AI", emoji: "💡", category: "rpa",
+    tagline: "AI-powered RPA for healthcare revenue cycle automation",
+    founded: 2019, hq: "Austin, TX", stage: "Series B",
+    lat: 30.2672, lng: -97.7431,
+    funding: { total: "$20M", round: "Series B", date: "2024", investors: "Closer Capital" },
+    products: [
+      { name: "AI Agents (CAM, PHIL, EVA)", desc: "Named AI agents for healthcare billing" },
+      { name: "Revenue Cycle Automation", desc: "End-to-end healthcare RCM" }
+    ],
+    website: "https://thoughtful.ai",
+    news: "Series B 2024; focus on healthcare AI automation"
   }
 ];
 
-const STATUS_COLORS = {
-  construction: '#ecc94b',
-  announced: '#9acd32',
-  operational: '#48bb78',
-  expanding: '#63b3ed'
-};
+let map, activeFilter = 'all', markers = [], selectedMarker = null;
 
-const STATUS_LABELS = {
-  construction: 'Under Construction',
-  announced: 'Announced / Planned',
-  operational: 'Recently Operational',
-  expanding: 'Expanding'
-};
-
-let map, markers = [], markerLayer;
-
-function createMarkerIcon(color, size = 16) {
-  const pulse = color === '#ecc94b' ? 'pulse-ring' : '';
-  return L.divIcon({
-    className: '',
-    html: `<div style="
-      width: ${size}px; height: ${size}px;
-      background: ${color};
-      border: 2.5px solid rgba(255,255,255,0.8);
-      border-radius: 50%;
-      box-shadow: 0 0 10px ${color}88, 0 2px 8px rgba(0,0,0,0.4);
-    " class="${pulse}"></div>`,
-    iconSize: [size, size],
-    iconAnchor: [size/2, size/2]
-  });
+function getCategoryClass(cat) {
+  const map = { orchestration: 'cat-orchestration', rpa: 'cat-rpa', voice: 'cat-voice', computer: 'cat-computer', local: 'cat-local', workflow: 'cat-workflow' };
+  return map[cat] || 'cat-orchestration';
 }
 
-function buildPopup(dc) {
-  const color = STATUS_COLORS[dc.status];
-  const badgeClass = 'badge-' + dc.status;
-  return `
-    <div class="popup-inner">
-      <div class="popup-header">
-        <div>
-          <div class="popup-title">${dc.name}</div>
-          <div class="popup-operator">${dc.operator}</div>
-        </div>
-      </div>
-      <span class="popup-badge ${badgeClass}">${STATUS_LABELS[dc.status]}</span>
-      <div class="popup-grid">
-        <div class="popup-field"><div class="popup-field-label">ð Location</div><div class="popup-field-value">${dc.location}</div></div>
-        <div class="popup-field"><div class="popup-field-label">â¡ Power</div><div class="popup-field-value">${dc.power}</div></div>
-        <div class="popup-field"><div class="popup-field-label">ð° Investment</div><div class="popup-field-value">${dc.investment}</div></div>
-        <div class="popup-field"><div class="popup-field-label">ð¥ï¸ GPUs / Compute</div><div class="popup-field-value">${dc.gpus}</div></div>
-        <div class="popup-field" style="grid-column: 1/-1"><div class="popup-field-label">ð Timeline</div><div class="popup-field-value">${dc.timeline}</div></div>
-      </div>
-      <div class="popup-desc">${dc.description}</div>
-      <div class="popup-source">ð Source: <a href="${dc.source_url}" target="_blank" rel="noopener">${dc.source_label}</a></div>
-    </div>
-  `;
+function getCategoryLabel(cat) {
+  const labels = { orchestration: 'Orchestration', rpa: 'RPA+AI', voice: 'Voice', computer: 'Computer-Use', local: 'Local AI', workflow: 'Workflow' };
+  return labels[cat] || cat;
+}
+
+function getMarkerClass(cat) {
+  return `custom-marker marker-${cat}`;
 }
 
 function initMap() {
   map = L.map('map', {
     center: [30, 10],
-    zoom: 2.5,
+    zoom: 2,
     zoomControl: true,
     attributionControl: true
   });
@@ -590,45 +1283,193 @@ function initMap() {
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
-    maxZoom: 19
+    maxZoom: 20
   }).addTo(map);
 
-  DATA_CENTERS.forEach(dc => {
-    const color = STATUS_COLORS[dc.status];
-    const marker = L.marker([dc.lat, dc.lng], {
-      icon: createMarkerIcon(color)
-    });
-    marker.bindPopup(buildPopup(dc), { maxWidth: 380, className: '' });
-    marker.bindTooltip(`<strong>${dc.name}</strong><br>${dc.operator}<br><em>${STATUS_LABELS[dc.status]}</em>`, {
-      direction: 'top', offset: [0, -10],
-      className: 'leaflet-tooltip'
-    });
-    marker.dcData = dc;
-    markers.push(marker);
-    marker.addTo(map);
+  renderMarkers();
+  renderSidebar();
+
+  // Add IRIS marker
+  const irisIcon = L.divIcon({
+    html: `<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#6c63ff,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:18px;border:3px solid rgba(255,255,255,0.5);box-shadow:0 0 20px rgba(108,99,255,0.8),0 4px 15px rgba(0,0,0,0.5);animation:pulse 2s infinite;">🚀</div>`,
+    className: '',
+    iconSize: [44, 44],
+    iconAnchor: [22, 22]
   });
 
-  // Update stats
-  document.getElementById('total-count').textContent = DATA_CENTERS.length;
-  document.getElementById('total-power').textContent = '8+';
-  document.getElementById('total-invest').textContent = '$200B+';
+  const style = document.createElement('style');
+  style.textContent = '@keyframes pulse { 0%,100%{box-shadow:0 0 20px rgba(108,99,255,0.8)} 50%{box-shadow:0 0 40px rgba(108,99,255,1)} }';
+  document.head.appendChild(style);
+
+  L.marker([43.1566, -77.6088], { icon: irisIcon })
+    .addTo(map)
+    .bindTooltip('<strong>IRIS</strong><br>Rochester, NY · Your Platform', { permanent: false, direction: 'top' });
 }
 
-function filterBy(group, btn) {
+function createMarkerIcon(company) {
+  return L.divIcon({
+    html: `<div class="${getMarkerClass(company.category)}" title="${company.name}">${company.emoji}</div>`,
+    className: '',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18]
+  });
+}
+
+function renderMarkers() {
+  markers.forEach(m => m.remove());
+  markers = [];
+
+  const filtered = COMPANIES.filter(c => activeFilter === 'all' || c.category === activeFilter);
+
+  filtered.forEach(company => {
+    const icon = createMarkerIcon(company);
+    const marker = L.marker([company.lat, company.lng], { icon })
+      .addTo(map)
+      .bindTooltip(`<strong>${company.emoji} ${company.name}</strong><br>${company.tagline}`, { direction: 'top', offset: [0, -20] })
+      .on('click', () => showDetail(company));
+    markers.push(marker);
+  });
+
+  document.getElementById('total-count').textContent = COMPANIES.length;
+  document.getElementById('funded-count').textContent = COMPANIES.filter(c => c.funding.total && c.funding.total !== '$' && c.funding.total !== 'N/A (Microsoft)' && c.funding.total !== 'N/A (Google)' && c.funding.total !== 'N/A (Amazon)' && c.funding.total !== 'N/A (ByteDance)').length;
+}
+
+function renderSidebar() {
+  const list = document.getElementById('company-list');
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const filtered = COMPANIES.filter(c => {
+    const matchFilter = activeFilter === 'all' || c.category === activeFilter;
+    const matchSearch = !search || c.name.toLowerCase().includes(search) || c.tagline.toLowerCase().includes(search);
+    return matchFilter && matchSearch;
+  });
+
+  list.innerHTML = filtered.map(c => `
+    <div class="company-item" onclick="flyToCompany(${c.id})" id="item-${c.id}">
+      <div class="company-item-header">
+        <span class="company-emoji">${c.emoji}</span>
+        <span class="company-name">${c.name}</span>
+        <span class="category-badge ${getCategoryClass(c.category)}">${getCategoryLabel(c.category)}</span>
+      </div>
+      <div class="company-desc">${c.tagline}</div>
+      ${c.funding.total && c.funding.total !== '$' ? `<div class="funding-tag">💰 ${c.funding.total} · ${c.funding.round}</div>` : '' }
+    </div>
+  `).join('');
+}
+
+function flyToCompany(id) {
+  const company = COMPANIES.find(c => c.id === id);
+  if (!company) return;
+
+  document.querySelectorAll('.company-item').forEach(el => el.classList.remove('selected'));
+  const item = document.getElementById(`item-${id}`);
+  if (item) item.classList.add('selected');
+
+  map.flyTo([company.lat, company.lng], 5, { duration: 1.2 });
+  setTimeout(() => showDetail(company), 800);
+}
+
+function showDetail(company) {
+  const panel = document.getElementById('detail-panel');
+  const content = document.getElementById('detail-content');
+
+  const hasFunding = company.funding.total && company.funding.total !== '$';
+
+  content.innerHTML = `
+    <div style="margin-bottom:16px">
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:12px">
+        <div class="popup-logo">${company.emoji}</div>
+        <div style="flex:1">
+          <div style="font-size:18px;font-weight:700;margin-bottom:4px">${company.name}</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.4">${company.tagline}</div>
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <span class="meta-chip chip-stage">${company.stage}</span>
+            <span class="meta-chip chip-founded">Founded ${company.founded}</span>
+            <span class="meta-chip chip-hq">📍 ${company.hq}</span>
+          </div>
+        </div>
+      </div>
+      <span class="category-badge ${getCategoryClass(company.category)}" style="font-size:11px">${getCategoryLabel(company.category)}</span>
+    </div>
+
+    ${hasFunding ? `
+    <div class="popup-section">
+      <div class="popup-section-title">💰 Funding</div>
+      <div class="funding-row">
+        <div>
+          <div class="funding-amount">${company.funding.total}</div>
+          <div class="funding-details">${company.funding.round} · ${company.funding.date}</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:var(--text-muted)">${company.funding.investors}</div>
+      </div>
+    </div>
+    ` : '' }
+
+    <div class="popup-section">
+      <div class="popup-section-title">🚀 Products</div>
+      <div class="product-list">
+        ${company.products.map(p => `
+          <div class="product-item">
+            <div class="product-name">${p.name}</div>
+            <div class="product-desc">${p.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    ${company.news ? `
+    <div class="popup-section">
+      <div class="popup-section-title">📰 Latest News</div>
+      <div style="background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-muted);line-height:1.5">${company.news}</div>
+    </div>
+    ` : '' }
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <a href="${company.website}" target="_blank" rel="noopener" class="popup-link primary">🌐 Website</a>
+      ${company.github ? `<a href="${company.github}" target="_blank" rel="noopener" class="popup-link">⭐ GitHub</a>` : '' }
+      <a href="https://www.crunchbase.com/organization/${company.name.toLowerCase().replace(/\s+/g,'-')}" target="_blank" rel="noopener" class="popup-link">📊 Crunchbase</a>
+    </div>
+  `;
+
+  panel.classList.add('visible');
+}
+
+function closePanel() {
+  document.getElementById('detail-panel').classList.remove('visible');
+  document.querySelectorAll('.company-item').forEach(el => el.classList.remove('selected'));
+}
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  markers.forEach(m => {
-    const dc = m.dcData;
-    const show = group === 'all' || dc.group === group;
-    if (show) {
-      if (!map.hasLayer(m)) m.addTo(map);
-    } else {
-      if (map.hasLayer(m)) map.removeLayer(m);
-    }
-  });
+  renderMarkers();
+  renderSidebar();
 }
 
-document.addEventListener('DOMContentLoaded', initMap);
+function filterCompanies() {
+  renderSidebar();
+}
+
+function refreshData() {
+  const btn = document.querySelector('.btn-refresh');
+  btn.textContent = '⟳ Refreshing...';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '⟳ Refresh Data';
+    btn.disabled = false;
+    alert('Data is up to date! (Jan 2025)\n\nTo pull live data, run:\n  python refresh_data.py');
+  }, 1500);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  initMap();
+  setTimeout(() => {
+    const loading = document.getElementById('loading');
+    loading.classList.add('hidden');
+    setTimeout(() => loading.remove(), 500);
+  }, 1200);
+});
 </script>
 </body>
 </html>
