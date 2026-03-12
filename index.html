@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Data Centers Under Construction â Live Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0a0e1a; color: #e2e8f0; overflow: hidden; }
+    #header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: linear-gradient(135deg, rgba(10,14,26,0.97) 0%, rgba(15,20,40,0.97) 100%);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(99,179,237,0.2);
+      padding: 12px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    #header h1 { font-size: 1.2rem; font-weight: 700; color: #63b3ed; letter-spacing: -0.02em; }
+    #header .subtitle { font-size: 0.75rem; color: #718096; margin-top: 2px; }
+    #stats { display: flex; gap: 20px; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 1.4rem; font-weight: 700; color: #63b3ed; }
+    .stat-label { font-size: 0.65rem; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; }
+    #map { position: fixed; top: 62px; left: 0; right: 0; bottom: 0; }
+    #legend {
+      position: fixed; bottom: 20px; left: 20px; z-index: 1000;
+      background: rgba(10,14,26,0.92); backdrop-filter: blur(10px);
+      border: 1px solid rgba(99,179,237,0.2); border-radius: 12px;
+      padding: 14px 16px; min-width: 180px;
+    }
+    #legend h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #718096; margin-bottom: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.78rem; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    #filter-panel {
+      position: fixed; top: 74px; right: 20px; z-index: 1000;
+      background: rgba(10,14,26,0.92); backdrop-filter: blur(10px);
+      border: 1px solid rgba(99,179,237,0.2); border-radius: 12px;
+      padding: 14px 16px; min-width: 200px;
+    }
+    #filter-panel h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #718096; margin-bottom: 10px; }
+    .filter-btn {
+      display: block; width: 100%; text-align: left; padding: 6px 10px;
+      background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.15);
+      border-radius: 6px; color: #e2e8f0; font-size: 0.78rem; cursor: pointer;
+      margin-bottom: 5px; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: rgba(99,179,237,0.2); border-color: #63b3ed; }
+    .leaflet-popup-content-wrapper {
+      background: rgba(10,14,26,0.97) !important;
+      border: 1px solid rgba(99,179,237,0.3) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6) !important;
+      color: #e2e8f0 !important;
+      max-width: 380px !important;
+    }
+    .leaflet-popup-tip { background: rgba(10,14,26,0.97) !important; }
+    .leaflet-popup-content { margin: 0 !important; padding: 0 !important; }
+    .popup-inner { padding: 16px 18px; }
+    .popup-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .popup-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .popup-title { font-size: 1rem; font-weight: 700; color: #63b3ed; line-height: 1.3; }
+    .popup-operator { font-size: 0.78rem; color: #a0aec0; margin-top: 2px; }
+    .popup-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 20px;
+      font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .badge-construction { background: rgba(236,201,75,0.15); color: #ecc94b; border: 1px solid rgba(236,201,75,0.3); }
+    .badge-announced { background: rgba(154,205,50,0.15); color: #9acd32; border: 1px solid rgba(154,205,50,0.3); }
+    .badge-operational { background: rgba(72,187,120,0.15); color: #48bb78; border: 1px solid rgba(72,187,120,0.3); }
+    .popup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .popup-field { background: rgba(99,179,237,0.06); border-radius: 8px; padding: 8px 10px; }
+    .popup-field-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: #718096; margin-bottom: 3px; }
+    .popup-field-value { font-size: 0.82rem; color: #e2e8f0; font-weight: 500; }
+    .popup-desc { font-size: 0.78rem; color: #a0aec0; line-height: 1.5; margin-bottom: 12px; }
+    .popup-source { font-size: 0.7rem; }
+    .popup-source a { color: #63b3ed; text-decoration: none; }
+    .popup-source a:hover { text-decoration: underline; }
+    .pulse-ring {
+      animation: pulse 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <div>
+    <h1>â¡ AI Data Centers Under Construction</h1>
+    <div class="subtitle">Live tracker â worldwide hyperscale & AI infrastructure buildout</div>
+  </div>
+  <div id="stats">
+    <div class="stat"><div class="stat-num" id="total-count">â</div><div class="stat-label">Sites</div></div>
+    <div class="stat"><div class="stat-num" id="total-power">â</div><div class="stat-label">Total GW</div></div>
+    <div class="stat"><div class="stat-num" id="total-invest">â</div><div class="stat-label">Investment</div></div>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<div id="legend">
+  <h3>Status</h3>
+  <div class="legend-item"><div class="legend-dot" style="background:#ecc94b"></div> Under Construction</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#9acd32"></div> Announced / Planned</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#48bb78"></div> Recently Operational</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#63b3ed"></div> Expanding</div>
+</div>
+
+<div id="filter-panel">
+  <h3>Filter by Operator</h3>
+  <button class="filter-btn active" onclick="filterBy('all', this)">All Sites</button>
+  <button class="filter-btn" onclick="filterBy('Microsoft', this)">Microsoft</button>
+  <button class="filter-btn" onclick="filterBy('Google', this)">Google</button>
+  <button class="filter-btn" onclick="filterBy('Amazon', this)">Amazon / AWS</button>
+  <button class="filter-btn" onclick="filterBy('Meta', this)">Meta</button>
+  <button class="filter-btn" onclick="filterBy('OpenAI', this)">OpenAI / Stargate</button>
+  <button class="filter-btn" onclick="filterBy('xAI', this)">xAI</button>
+  <button class="filter-btn" onclick="filterBy('Other', this)">Other</button>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const DATA_CENTERS = [
+  {
+    id: 1, name: "Stargate â Abilene Campus",
+    operator: "OpenAI / Oracle / SoftBank", group: "OpenAI",
+    lat: 32.4487, lng: -99.7331,
+    status: "construction",
+    location: "Abilene, Texas, USA",
+    power: "1.2 GW (planned)",
+    investment: "$100B (Stargate total)",
+    gpus: "100,000+ NVIDIA GPUs",
+    timeline: "Phase 1 complete 2026",
+    description: "First Stargate campus, operated by Crusoe for OpenAI. Final building topped out March 2026. Part of the $500B Stargate initiative.",
+    source_url: "https://www.datacenterdynamics.com/en/news/crusoe-tops-out-final-building-at-openai-stargate-data-center-campus-in-abilene-texas",
+    source_label: "Data Center Dynamics"
+  },
+  {
+    id: 2, name: "Stargate â Michigan Campus",
+    operator: "OpenAI / Oracle", group: "OpenAI",
+    lat: 42.1764, lng: -83.7824,
+    status: "announced",
+    location: "Saline Township, Michigan, USA",
+    power: "~500 MW",
+    investment: "$20B+",
+    gpus: "NVIDIA Blackwell clusters",
+    timeline: "Construction 2026",
+    description: "Oracle and OpenAI announced a new Stargate data center campus in Saline Township, Michigan, as part of the broader Stargate AI infrastructure rollout.",
+    source_url: "https://www.prnewswire.com/news-releases/openai-oracle-and-related-digital-announce-stargate-data-center-site-in-michigan-302600302.html",
+    source_label: "PR Newswire"
+  },
+  {
+    id: 3, name: "Stargate Norway â Narvik",
+    operator: "OpenAI / Nscale / Aker", group: "OpenAI",
+    lat: 68.4385, lng: 17.4272,
+    status: "announced",
+    location: "Narvik, Northern Norway",
+    power: "200 MW (Phase 1)",
+    investment: "$1B+",
+    gpus: "100,000 NVIDIA GPUs",
+    timeline: "2025â2026",
+    description: "OpenAI's first European data center, powered entirely by renewable hydroelectric energy. Partnership with Norwegian companies Nscale and Aker.",
+    source_url: "https://openai.com/index/introducing-stargate-norway",
+    source_label: "OpenAI"
+  },
+  {
+    id: 4, name: "xAI Colossus â Memphis",
+    operator: "xAI (Elon Musk)", group: "xAI",
+    lat: 35.0731, lng: -89.9014,
+    status: "construction",
+    location: "Collierville / Memphis, Tennessee, USA",
+    power: "~2 GW (planned)",
+    investment: "$20B",
+    gpus: "550,000+ GPUs (scaling to 1M)",
+    timeline: "Expanding through 2026",
+    description: "Home of the Colossus supercomputer â world's largest AI training cluster. Hosts Grok LLM training. Rapidly expanded from 100K to 550K+ GPUs in 2025.",
+    source_url: "https://constructionreviewonline.com/xai-to-invest-659-million-in-new-memphis-data-center-cluster-buildout-for-grok",
+    source_label: "Construction Review Online"
+  },
+  {
+    id: 5, name: "xAI â Mississippi Data Center",
+    operator: "xAI (Elon Musk)", group: "xAI",
+    lat: 32.3547, lng: -90.8779,
+    status: "announced",
+    location: "Mississippi, USA",
+    power: "Large-scale",
+    investment: "$20B (state pledge)",
+    gpus: "TBD",
+    timeline: "2025â2027",
+    description: "New xAI data center in Mississippi, confirmed with Elon Musk pledging $20B investment in the state for AI infrastructure expansion.",
+    source_url: "https://www.datacenterdynamics.com/en/news/xai-confirms-new-data-center-in-mississippi-elon-musk-pledges-20bn-investment-in-state",
+    source_label: "Data Center Dynamics"
+  },
+  {
+    id: 6, name: "Meta Hyperion â Richland Parish",
+    operator: "Meta", group: "Meta",
+    lat: 32.2099, lng: -91.8185,
+    status: "construction",
+    location: "Richland Parish, Louisiana, USA",
+    power: "~1 GW",
+    investment: "$10B",
+    gpus: "Meta AI training clusters",
+    timeline: "2024â2030",
+    description: "Meta's largest AI data center, covering 4 million sq ft on 2,250 acres. Announced December 2024. Expected to support 500+ jobs and Meta's next-gen AI models.",
+    source_url: "https://datacenters.atmeta.com/richland-parish-data-center",
+    source_label: "Meta"
+  },
+  {
+    id: 7, name: "Amazon AWS â Louisiana",
+    operator: "Amazon AWS", group: "Amazon",
+    lat: 32.5252, lng: -93.7502,
+    status: "construction",
+    location: "Caddo & Bossier Parishes, Louisiana, USA",
+    power: "~600 MW",
+    investment: "$12B",
+    gpus: "AWS Trainium/Inferentia clusters",
+    timeline: "2025â2027",
+    description: "Amazon AWS $12 billion data center campus spanning Caddo and Bossier parishes in Louisiana, part of AWS's $100B+ expansion plan.",
+    source_url: "https://www.datacenterdynamics.com/en/news",
+    source_label: "Data Center Dynamics"
+  },
+  {
+    id: 8, name: "Amazon AWS â Vicksburg, Mississippi",
+    operator: "Amazon AWS", group: "Amazon",
+    lat: 32.3526, lng: -90.8779,
+    status: "announced",
+    location: "Vicksburg, Mississippi, USA",
+    power: "~300 MW",
+    investment: "$3B",
+    gpus: "AWS AI infrastructure",
+    timeline: "Construction starts 2026",
+    description: "AWS $3 billion data center campus in Vicksburg, Mississippi. Part of Amazon's broader $100B+ US data center investment strategy.",
+    source_url: "https://constructionreviewonline.com/aws-unveils-3b-data-center-campus-in-vicksburg-ms-construction-targets-2026-start",
+    source_label: "Construction Review Online"
+  },
+  {
+    id: 9, name: "Microsoft AI Campus â Mount Pleasant, WI",
+    operator: "Microsoft", group: "Microsoft",
+    lat: 42.7192, lng: -87.8843,
+    status: "construction",
+    location: "Mount Pleasant / Racine County, Wisconsin, USA",
+    power: "~500 MW",
+    investment: "$4B",
+    gpus: "Azure AI supercomputing",
+    timeline: "Operational early 2026",
+    description: "Microsoft describes this as "the world's most powerful AI datacenter." Located in Racine County, Wisconsin. Second facility also under development nearby.",
+    source_url: "https://blogs.microsoft.com/on-the-issues/2025/09/18/made-in-wisconsin-the-worlds-most-powerful-ai-datacenter",
+    source_label: "Microsoft Blog"
+  },
+  {
+    id: 10, name: "Vantage Frontier Campus",
+    operator: "Vantage Data Centers", group: "Other",
+    lat: 32.7263, lng: -99.6527,
+    status: "construction",
+    location: "Shackelford County, Texas, USA",
+    power: "1.4 GW",
+    investment: "$25B",
+    gpus: "AI-optimized infrastructure",
+    timeline: "First delivery H2 2026",
+    description: "Largest Vantage project ever â 1,200 acres, 10 data centers, 3.7M sq ft. Designed for AI hyperscale workloads. First delivery scheduled H2 2026.",
+    source_url: "https://vantage-dc.com/data-center-locations/north-america/shackelford-county-tx",
+    source_label: "Vantage Data Centers"
+  },
+  {
+    id: 11, name: "Google â Kansas City Campus",
+    operator: "Google", group: "Google",
+    lat: 39.0997, lng: -94.5786,
+    status: "construction",
+    location: "Kansas City, Missouri, USA",
+    power: "~300 MW",
+    investment: "$1B+",
+    gpus: "Google TPU v5 clusters",
+    timeline: "Construction began early 2026",
+    description: "Google's second data center campus in Kansas City, Missouri. Part of Google's $75B+ 2025 capex plan for AI infrastructure expansion.",
+    source_url: "https://www.datacenterdynamics.com/en/news/construction-begins-at-googles-second-data-center-campus-in-kansas-city-missouri",
+    source_label: "Data Center Dynamics"
+  },
+  {
+    id: 12, name: "Google â Morgan County, Indiana",
+    operator: "Google", group: "Google",
+    lat: 39.4823, lng: -86.4272,
+    status: "announced",
+    location: "Morgan County, Indiana, USA",
+    power: "~500 MW",
+    investment: "$2B+",
+    gpus: "Google AI infrastructure",
+    timeline: "2025â2027",
+    description: "Google revealed itself as the developer behind a 500-acre Morgan County data center campus. Part of Google's major Indiana infrastructure investment.",
+    source_url: "https://www.insideindianabusiness.com/articles/google-reveals-itself-as-developer-behind-500-acre-morgan-county-data-center-campus",
+    source_label: "Inside Indiana Business"
+  },
+  {
+    id: 13, name: "Google â Monroe County, Georgia",
+    operator: "Google", group: "Google",
+    lat: 33.0232, lng: -83.9213,
+    status: "announced",
+    location: "Monroe County, Georgia, USA",
+    power: "~300 MW",
+    investment: "$1B+",
+    gpus: "Google AI infrastructure",
+    timeline: "2025â2027",
+    description: "Google acquired $42M in Monroe County land for a new data center campus. Part of Google's Southern US expansion strategy.",
+    source_url: "https://www.gpb.org/news/2025/10/14/google-drops-42-million-on-monroe-county-land-for-data-center",
+    source_label: "GPB News"
+  },
+  {
+    id: 14, name: "CoreWeave â Denton, Texas",
+    operator: "CoreWeave", group: "Other",
+    lat: 33.2148, lng: -97.1331,
+    status: "construction",
+    location: "Denton, Texas, USA",
+    power: "~200 MW",
+    investment: "$5B+ (total portfolio)",
+    gpus: "16,000+ NVIDIA H100/H200",
+    timeline: "Operational 2025",
+    description: "CoreWeave deployed 16,000 GPUs at its Denton, Texas facility. CoreWeave is the fastest-growing AI cloud provider, building GPU-optimized data centers globally.",
+    source_url: "https://www.datacenterdynamics.com/en/news/coreweave-deploys-16000-gpus-at-delayed-data-center-in-denton-texas",
+    source_label: "Data Center Dynamics"
+  },
+  {
+    id: 15, name: "CoreWeave â Lancaster, Pennsylvania",
+    operator: "CoreWeave", group: "Other",
+    lat: 40.0379, lng: -76.3055,
+    status: "construction",
+    location: "Lancaster, Pennsylvania, USA",
+    power: "~150 MW",
+    investment: "$2B+",
+    gpus: "NVIDIA GPU clusters",
+    timeline: "2025",
+    description: "CoreWeave data center in Lancaster, PA. CoreWeave operates one of the largest NVIDIA GPU fleets globally for AI training and inference.",
+    source_url: "https://www.coreweave.com",
+    source_label: "CoreWeave"
+  },
+  {
+    id: 16, name: "CoreWeave â Hammond, Indiana",
+    operator: "CoreWeave", group: "Other",
+    lat: 41.5834, lng: -87.5001,
+    status: "construction",
+    location: "Hammond, Indiana, USA",
+    power: "~150 MW",
+    investment: "$2B+",
+    gpus: "NVIDIA GPU clusters",
+    timeline: "2025",
+    description: "CoreWeave GPU-optimized data center in Hammond, Indiana. Part of CoreWeave's rapid US expansion to meet AI compute demand.",
+    source_url: "https://www.coreweave.com",
+    source_label: "CoreWeave"
+  },
+  {
+    id: 17, name: "CoreWeave â UK (Crawley)",
+    operator: "CoreWeave", group: "Other",
+    lat: 51.1093, lng: -0.1872,
+    status: "operational",
+    location: "Crawley, England, UK",
+    power: "~100 MW",
+    investment: "$1B+",
+    gpus: "NVIDIA H100 clusters",
+    timeline: "Operational 2025",
+    description: "CoreWeave's first UK data center in Crawley, now operational. Supports AI workloads for European customers. Second UK facility in London Docklands also operational.",
+    source_url: "https://www.coreweave.com/news/coreweave-announces-two-initial-data-centers-in-the-uk-are-now-operational",
+    source_label: "CoreWeave"
+  },
+  {
+    id: 18, name: "Microsoft â UAE Expansion (G42)",
+    operator: "Microsoft / G42", group: "Microsoft",
+    lat: 24.4539, lng: 54.3773,
+    status: "construction",
+    location: "Abu Dhabi, UAE",
+    power: "200 MW (expansion)",
+    investment: "$15.2B",
+    gpus: "Azure AI clusters",
+    timeline: "Operational by end 2026",
+    description: "Microsoft committed $15.2B to UAE AI infrastructure expansion in partnership with G42. 200 MW capacity increase expected operational before end of 2026.",
+    source_url: "https://news.microsoft.com/source/emea/2025/11/microsoft-and-g42-accelerate-uaes-digital-future-with-major-data-centre-expansion",
+    source_label: "Microsoft News"
+  },
+  {
+    id: 19, name: "SK Group + AWS â Ulsan Hyperscale",
+    operator: "SK Group / Amazon AWS", group: "Amazon",
+    lat: 35.5384, lng: 129.3114,
+    status: "construction",
+    location: "Ulsan, South Korea",
+    power: "~500 MW",
+    investment: "$5B",
+    gpus: "AWS AI infrastructure",
+    timeline: "Groundbreaking Aug 2025, operational 2029",
+    description: "South Korea's largest AI hyperscale data center. SK Group and AWS partnership. Groundbreaking in August 2025, full operations expected by 2029.",
+    source_url: "https://www.koreatimes.co.kr",
+    source_label: "Korea Times"
+  },
+  {
+    id: 20, name: "SoftBank â Hokkaido Tomakomai AI DC",
+    operator: "SoftBank", group: "Other",
+    lat: 42.6365, lng: 141.6055,
+    status: "construction",
+    location: "Tomakomai, Hokkaido, Japan",
+    power: "~300 MW",
+    investment: "$2B+",
+    gpus: "NVIDIA AI clusters",
+    timeline: "Construction began May 2025",
+    description: "SoftBank's Hokkaido Tomakomai AI Data Center. Construction began May 2025. Powered by renewable energy from Hokkaido's abundant wind and geothermal resources.",
+    source_url: "https://www.softbank.jp/en/sbnews/entry/20250501_01",
+    source_label: "SoftBank News"
+  },
+  {
+    id: 21, name: "Nexus Yang â Malaysia",
+    operator: "Vena Energy / Nexus", group: "Other",
+    lat: 2.7297, lng: 101.9381,
+    status: "construction",
+    location: "Negeri Sembilan, Malaysia",
+    power: "350 MW",
+    investment: "$2B+",
+    gpus: "AI-ready infrastructure",
+    timeline: "Groundbreaking 2026",
+    description: "350 MW Nexus Yang AI-ready green data centre in Negeri Sembilan, Malaysia. Powered by renewable energy. Designed for hyperscale AI workloads.",
+    source_url: "https://solarquarter.com/2026/03/03/vena-nexus-breaks-ground-on-350-mw-nexus-yang-ai-ready-green-data-centre-in-negeri-sembilan",
+    source_label: "SolarQuarter"
+  },
+  {
+    id: 22, name: "Microsoft â Norway Data Center",
+    operator: "Microsoft", group: "Microsoft",
+    lat: 59.9139, lng: 10.7522,
+    status: "construction",
+    location: "Norway",
+    power: "~200 MW",
+    investment: "$1B+",
+    gpus: "Azure AI infrastructure",
+    timeline: "2025â2026",
+    description: "Microsoft is building a new hyperscale data center in Norway, powered by renewable hydroelectric energy. Part of Microsoft's European AI infrastructure expansion.",
+    source_url: "https://www.siliconrepublic.com/business/microsoft-google-european-ai-data-centre-germany-portugal-2025",
+    source_label: "Silicon Republic"
+  },
+  {
+    id: 23, name: "Google â Waltham Cross, UK",
+    operator: "Google", group: "Google",
+    lat: 51.6975, lng: -0.0220,
+    status: "operational",
+    location: "Waltham Cross, Hertfordshire, UK",
+    power: "~100 MW",
+    investment: "Â£5B (UK total)",
+    gpus: "Google TPU clusters",
+    timeline: "Opened 2025",
+    description: "Google opened its Waltham Cross data center as part of a Â£5 billion two-year UK investment. Supports Google AI services across Europe.",
+    source_url: "https://www.prnewswire.com/news-releases/google-opens-waltham-cross-data-centre-as-part-of-two-year-5-billion-investment-in-the-uk-to-help-power-its-ai-economy-302556707.html",
+    source_label: "PR Newswire"
+  },
+  {
+    id: 24, name: "NEOM AI Data Center",
+    operator: "NEOM / Saudi Arabia", group: "Other",
+    lat: 28.0339, lng: 36.2765,
+    status: "announced",
+    location: "NEOM, Tabuk Province, Saudi Arabia",
+    power: "~500 MW",
+    investment: "$5B",
+    gpus: "AI supercomputing",
+    timeline: "2025â2028",
+    description: "$5 billion AI data center announced for NEOM, Saudi Arabia's futuristic megacity project. Part of Saudi Arabia's Vision 2030 AI infrastructure strategy.",
+    source_url: "https://www.datacenterdynamics.com/en/news",
+    source_label: "Data Center Dynamics"
+  },
+  {
+    id: 25, name: "Oracle â Saline Township, Michigan",
+    operator: "Oracle", group: "Other",
+    lat: 42.1748, lng: -83.7793,
+    status: "announced",
+    location: "Saline Township, Michigan, USA",
+    power: "~200 MW",
+    investment: "$1B+",
+    gpus: "Oracle AI cloud",
+    timeline: "2025â2026",
+    description: "Oracle announced a new AI data center facility in Saline Township, Michigan. Oracle is a key infrastructure partner in the Stargate AI initiative.",
+    source_url: "https://www.oracle.com/news/announcement/blog/oracle-is-set-to-power-on-new-data-center-in-michigan-2025-1018",
+    source_label: "Oracle"
+  },
+  {
+    id: 26, name: "CyrusOne + Calpine â Texas",
+    operator: "CyrusOne / Calpine", group: "Other",
+    lat: 30.2672, lng: -97.7431,
+    status: "construction",
+    location: "Texas, USA",
+    power: "~300 MW",
+    investment: "$1.2B",
+    gpus: "AI-optimized colocation",
+    timeline: "2025â2026",
+    description: "$1.2 billion AI data center campus by CyrusOne and Calpine in Texas, featuring on-site natural gas power generation for reliability.",
+    source_url: "https://www.datacenterdynamics.com/en/news",
+    source_label: "Data Center Dynamics"
+  },
+  {
+    id: 27, name: "Amazon AWS â Warren County, Mississippi",
+    operator: "Amazon AWS", group: "Amazon",
+    lat: 32.3824, lng: -90.8779,
+    status: "announced",
+    location: "Warren County, Mississippi, USA",
+    power: "~200 MW",
+    investment: "$3B",
+    gpus: "AWS AI infrastructure",
+    timeline: "2025â2027",
+    description: "Amazon AWS $3 billion data center investment in Warren County, Mississippi. Part of Amazon's commitment to expand AI cloud infrastructure in the US South.",
+    source_url: "https://www.aboutamazon.com/news/company-news/amazon-3-billion-mississippi-data-center-investment",
+    source_label: "About Amazon"
+  },
+  {
+    id: 28, name: "Microsoft â Dorr & Lowell Townships, Michigan",
+    operator: "Microsoft", group: "Microsoft",
+    lat: 42.7312, lng: -85.6502,
+    status: "announced",
+    location: "Dorr & Lowell Townships, Michigan, USA",
+    power: "~300 MW",
+    investment: "$2B+",
+    gpus: "Azure AI infrastructure",
+    timeline: "2025â2027",
+    description: "Microsoft plans data centers in Dorr and Lowell Townships, Michigan, with rezoning applications filed for Gaines Township. Part of Microsoft's $80B FY2025 capex.",
+    source_url: "https://www.datacenterdynamics.com/en/news/microsoft-plans-data-centers-in-dorr-and-lowell-townships-applies-for-property-rezoning-in-gaines-townships",
+    source_label: "Data Center Dynamics"
+  }
+];
+
+const STATUS_COLORS = {
+  construction: '#ecc94b',
+  announced: '#9acd32',
+  operational: '#48bb78',
+  expanding: '#63b3ed'
+};
+
+const STATUS_LABELS = {
+  construction: 'Under Construction',
+  announced: 'Announced / Planned',
+  operational: 'Recently Operational',
+  expanding: 'Expanding'
+};
+
+let map, markers = [], markerLayer;
+
+function createMarkerIcon(color, size = 16) {
+  const pulse = color === '#ecc94b' ? 'pulse-ring' : '';
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width: ${size}px; height: ${size}px;
+      background: ${color};
+      border: 2.5px solid rgba(255,255,255,0.8);
+      border-radius: 50%;
+      box-shadow: 0 0 10px ${color}88, 0 2px 8px rgba(0,0,0,0.4);
+    " class="${pulse}"></div>`,
+    iconSize: [size, size],
+    iconAnchor: [size/2, size/2]
+  });
+}
+
+function buildPopup(dc) {
+  const color = STATUS_COLORS[dc.status];
+  const badgeClass = 'badge-' + dc.status;
+  return `
+    <div class="popup-inner">
+      <div class="popup-header">
+        <div>
+          <div class="popup-title">${dc.name}</div>
+          <div class="popup-operator">${dc.operator}</div>
+        </div>
+      </div>
+      <span class="popup-badge ${badgeClass}">${STATUS_LABELS[dc.status]}</span>
+      <div class="popup-grid">
+        <div class="popup-field"><div class="popup-field-label">ð Location</div><div class="popup-field-value">${dc.location}</div></div>
+        <div class="popup-field"><div class="popup-field-label">â¡ Power</div><div class="popup-field-value">${dc.power}</div></div>
+        <div class="popup-field"><div class="popup-field-label">ð° Investment</div><div class="popup-field-value">${dc.investment}</div></div>
+        <div class="popup-field"><div class="popup-field-label">ð¥ï¸ GPUs / Compute</div><div class="popup-field-value">${dc.gpus}</div></div>
+        <div class="popup-field" style="grid-column: 1/-1"><div class="popup-field-label">ð Timeline</div><div class="popup-field-value">${dc.timeline}</div></div>
+      </div>
+      <div class="popup-desc">${dc.description}</div>
+      <div class="popup-source">ð Source: <a href="${dc.source_url}" target="_blank" rel="noopener">${dc.source_label}</a></div>
+    </div>
+  `;
+}
+
+function initMap() {
+  map = L.map('map', {
+    center: [30, 10],
+    zoom: 2.5,
+    zoomControl: true,
+    attributionControl: true
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  DATA_CENTERS.forEach(dc => {
+    const color = STATUS_COLORS[dc.status];
+    const marker = L.marker([dc.lat, dc.lng], {
+      icon: createMarkerIcon(color)
+    });
+    marker.bindPopup(buildPopup(dc), { maxWidth: 380, className: '' });
+    marker.bindTooltip(`<strong>${dc.name}</strong><br>${dc.operator}<br><em>${STATUS_LABELS[dc.status]}</em>`, {
+      direction: 'top', offset: [0, -10],
+      className: 'leaflet-tooltip'
+    });
+    marker.dcData = dc;
+    markers.push(marker);
+    marker.addTo(map);
+  });
+
+  // Update stats
+  document.getElementById('total-count').textContent = DATA_CENTERS.length;
+  document.getElementById('total-power').textContent = '8+';
+  document.getElementById('total-invest').textContent = '$200B+';
+}
+
+function filterBy(group, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  markers.forEach(m => {
+    const dc = m.dcData;
+    const show = group === 'all' || dc.group === group;
+    if (show) {
+      if (!map.hasLayer(m)) m.addTo(map);
+    } else {
+      if (map.hasLayer(m)) map.removeLayer(m);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initMap);
+</script>
+</body>
+</html>
